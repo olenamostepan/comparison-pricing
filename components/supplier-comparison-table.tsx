@@ -15,7 +15,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { ChartContainer } from '@/components/ui/chart'
+import { PieChart, Pie, Tooltip as RechartsTooltip, Cell } from 'recharts'
 import { getTenderConfig } from '@/lib/tender-data'
+
 // ─── Types ─────────────────────────────────────────────────────────────
 
 type ViewMode = 'absolute' | 'per-kwp' | 'pct-total'
@@ -85,6 +88,27 @@ const LED_ROSTOCK_OVERVIEW = {
   ],
   closedDate: "15 Nov 2025",
   duration: "14 days",
+}
+
+const STATUS_CHART_COLORS = [
+  '#94A3B8', // slate — didn't respond
+  '#F59E0B', // amber — missed deadline
+  '#64748B', // grey — excluded
+  '#29B273', // green — submitted
+  '#CBD5E1', // fallback
+]
+
+function parseOverviewDetails(details: string[], invited: number): { name: string; value: number; pct: number }[] {
+  return details
+    .map((d) => {
+      const m = d.match(/^(\d+)\s+(.+)$/)
+      if (!m) return null
+      const count = parseInt(m[1], 10)
+      const label = m[2]
+      const pct = invited > 0 ? Math.round((count / invited) * 100) : 0
+      return { name: label, value: count, pct }
+    })
+    .filter((x): x is { name: string; value: number; pct: number } => x !== null)
 }
 
 // Project 322 — Braehead — from breakdown.html, comparison.html
@@ -487,53 +511,92 @@ export function SupplierComparisonTable({
         {/* Tender Overview */}
         {overview && (
           <div className="mb-6 flex flex-col items-start gap-4 p-4 rounded-lg border border-cq-border bg-white">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between w-full">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-4 mb-2">
-                  <div className="font-bold text-cq-text">Tender Overview:</div>
-                  <button
-                    onClick={() => setShowOverviewDetails((v) => !v)}
-                    className="text-sm text-[#1C75BC] hover:underline font-bold flex items-center gap-1"
-                  >
-                    {showOverviewDetails ? (
-                      <>
-                        Hide details
-                        <ChevronUp className="h-4 w-4" />
-                      </>
-                    ) : (
-                      <>
-                        Show details
-                        <ChevronDown className="h-4 w-4" />
-                      </>
-                    )}
-                  </button>
+            {/* Header row: title left, metadata + badge + show/hide right */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
+              <div className="font-bold text-cq-text">Tender Overview:</div>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+                <span className="text-sm text-cq-text-secondary">
+                  Tender closed: <span className="font-bold text-cq-text">{overview.closedDate}</span>
+                  <span className="mx-2 text-cq-border">|</span>
+                  Duration: <span className="font-bold text-cq-text">{overview.duration}</span>
+                </span>
+                <div className="flex items-center px-3 py-1 rounded-[20px] bg-[#F59E0B] text-white text-sm font-bold">
+                  Closed
                 </div>
-                <div className="text-sm text-cq-text-secondary">
-                  <span className="font-semibold">{overview.submitted}</span> of{" "}
-                  <span className="font-semibold">{overview.invited}</span> suppliers submitted (
-                  <span className="font-semibold">{responseRate}</span>)
-                </div>
-                {showOverviewDetails && (
-                  <div className="mt-3 flex flex-col items-start gap-4 p-3 rounded-lg border border-cq-border bg-cq-bg self-stretch w-full">
-                    <ul className="list-disc pl-6 space-y-1 text-sm text-cq-text-secondary">
-                      {overview.details.map((detail) => (
-                        <li key={detail}>{detail}</li>
-                      ))}
-                    </ul>
-                    <div className="text-sm text-cq-text-secondary">
-                      <span>Tender closed: {overview.closedDate}</span>
-                      <span className="mx-2">|</span>
-                      <span>Duration: {overview.duration}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="md:ml-6">
-                <div className="flex h-6 px-3 items-center gap-1 rounded-[20px] border border-[#1C75BC] bg-[#1C75BC] text-white font-bold text-sm">
-                  Closed: {overview.closedDate}
-                </div>
+                <button
+                  onClick={() => setShowOverviewDetails((v) => !v)}
+                  className="text-sm text-[#1C75BC] hover:underline font-bold flex items-center gap-1 shrink-0"
+                >
+                  {showOverviewDetails ? (
+                    <>
+                      Hide details
+                      <ChevronUp className="h-4 w-4" />
+                    </>
+                  ) : (
+                    <>
+                      Show details
+                      <ChevronDown className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
               </div>
             </div>
+            <div className="text-sm text-cq-text-secondary">
+              <span className="font-semibold">{overview.submitted}</span> of{" "}
+              <span className="font-semibold">{overview.invited}</span> suppliers submitted (
+              <span className="font-semibold">{responseRate}</span>)
+            </div>
+                {showOverviewDetails && (() => {
+                  const chartData = parseOverviewDetails(overview.details, overview.invited)
+                  const chartConfig = Object.fromEntries(
+                    chartData.map((row, i) => [
+                      row.name,
+                      { label: `${row.name} (${row.pct}%)`, color: STATUS_CHART_COLORS[i % STATUS_CHART_COLORS.length] },
+                    ])
+                  )
+                  return (
+                    <div className="mt-3 flex gap-6 items-center">
+                        <div className="flex flex-col gap-1.5 shrink-0">
+                          {chartData.map((row, i) => (
+                            <div key={row.name} className="flex items-center gap-2 text-sm">
+                              <div
+                                className="w-2.5 h-2.5 rounded-sm shrink-0"
+                                style={{ backgroundColor: STATUS_CHART_COLORS[i % STATUS_CHART_COLORS.length] }}
+                              />
+                              <span className="text-cq-text font-medium">{row.name}</span>
+                              <span className="text-cq-text-secondary tabular-nums">{row.pct}%</span>
+                            </div>
+                          ))}
+                        </div>
+                        {chartData.length > 0 && (
+                          <div className="flex-1 min-w-[200px] flex justify-center">
+                            <ChartContainer config={chartConfig} className="h-[180px] w-[180px]">
+                              <PieChart>
+                                <Pie
+                                  data={chartData}
+                                  dataKey="pct"
+                                  nameKey="name"
+                                  cx="50%"
+                                  cy="50%"
+                                  innerRadius={50}
+                                  outerRadius={75}
+                                  paddingAngle={2}
+                                >
+                                  {chartData.map((_, i) => (
+                                    <Cell key={i} fill={STATUS_CHART_COLORS[i % STATUS_CHART_COLORS.length]} />
+                                  ))}
+                                </Pie>
+                                <RechartsTooltip
+                                  formatter={(value: number, name: string) => [`${value}%`, name]}
+                                  contentStyle={{ fontSize: 12 }}
+                                />
+                              </PieChart>
+                            </ChartContainer>
+                          </div>
+                        )}
+                    </div>
+                  )
+                })()}
           </div>
         )}
 
