@@ -9,8 +9,9 @@ export function ProjectSwitcher() {
   const pathname = usePathname()
   const isHome = pathname === '/'
   const isSolar =
-    pathname.startsWith('/supplier-comparison') &&
-    !pathname.startsWith('/supplier-comparison/led')
+    pathname === '/supplier-comparison' ||
+    (pathname.startsWith('/supplier-comparison/') &&
+      !pathname.startsWith('/supplier-comparison/led'))
   const isLedBerlin =
     pathname.startsWith('/supplier-comparison/led') &&
     !pathname.startsWith('/supplier-comparison/led-rostock')
@@ -18,7 +19,7 @@ export function ProjectSwitcher() {
 
   return (
     <div className="border-b border-cq-border bg-white">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center gap-4 flex-wrap">
+      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
         <Link
           href="/"
           className={cn(

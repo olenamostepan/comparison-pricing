@@ -5,7 +5,7 @@ const projects = [
   {
     slug: "solar",
     title: "Solar",
-    description: "Project 322 — Braehead shopping centre. 12 CapEx, 3 PPA excluded. Ranked by £/kWp.",
+    description: "Project 322 — Braehead. Shopping centre, LL1–LL3, Red Parking, car park roofs. Supplier price comparison with Full-Scope and Smaller systems.",
     href: "/supplier-comparison",
     icon: "/site elements/solar.svg",
   },

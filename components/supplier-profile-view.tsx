@@ -466,12 +466,12 @@ export function SupplierProfileView({
                   <Image
                     src={SUPPLIER_LOGOS[currentId]}
                     alt=""
-                    width={96}
-                    height={96}
-                    className="object-contain rounded-lg w-24 h-24"
+                    width={64}
+                    height={64}
+                    className="object-contain rounded-lg w-16 h-16"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-lg bg-cq-border-light flex items-center justify-center text-lg font-bold text-cq-text-secondary">
+                  <div className="w-16 h-16 rounded-lg bg-cq-border-light flex items-center justify-center text-sm font-bold text-cq-text-secondary">
                     {(shortlist.find((s) => s.id === currentId)?.name ?? ALL_SUPPLIER_NAMES[currentId] ?? data.name)
                       .slice(0, 2)
                       .toUpperCase()}

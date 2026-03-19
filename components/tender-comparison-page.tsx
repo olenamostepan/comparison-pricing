@@ -98,17 +98,18 @@ export function TenderComparisonPage({ config }: TenderComparisonPageProps) {
       </header>
 
       <div className="max-w-7xl mx-auto px-6 pt-6 pb-3">
-        <div className="flex items-start gap-4 mb-4">
-          <div className="w-12 h-12 rounded flex items-center justify-center flex-shrink-0">
-            <Image
-              src={config.avatar}
-              alt="Project icon"
-              width={48}
-              height={48}
-              className="rounded object-cover"
-            />
-          </div>
-          <div className="flex-1">
+        <div className="flex items-start gap-6 mb-4">
+          <div className="flex items-start gap-4 flex-1 min-w-0">
+            <div className="w-12 h-12 rounded flex items-center justify-center flex-shrink-0">
+              <Image
+                src={config.avatar}
+                alt="Project icon"
+                width={48}
+                height={48}
+                className="rounded object-cover"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-[28px] font-extrabold text-[#1E2832] leading-tight">
                 {config.title}
@@ -161,6 +162,23 @@ export function TenderComparisonPage({ config }: TenderComparisonPageProps) {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Project photos — right of header */}
+        {config.projectPhotos && config.projectPhotos.length > 0 && (
+          <div className="flex gap-2 shrink-0">
+            {config.projectPhotos.slice(0, 4).map((src, i) => (
+              <Image
+                key={i}
+                src={src}
+                alt={`Project photo ${i + 1}`}
+                width={160}
+                height={120}
+                className="rounded-lg border border-[#F3F4F6] object-cover"
+              />
+            ))}
+          </div>
+        )}
         </div>
 
         <div className="mb-4 flex flex-col items-start gap-4 p-4 rounded-lg border border-[#F3F4F6] bg-white">

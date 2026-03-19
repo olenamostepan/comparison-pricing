@@ -999,6 +999,11 @@ export const tenderConfigs: Record<TenderScenario, TenderConfig> = {
     location: "4 Market Square, Northampton, NN1 1DE, UK",
     avatar: "/site elements/Avatar.svg",
     tags: ["COMMERCIAL", "+1MW SOLAR"],
+    projectPhotos: [
+      "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=300&fit=crop",
+    ],
     projectDetails: {
       type: "Solar PV",
       expectedStartDate: "Mon 7 Apr, 2025",

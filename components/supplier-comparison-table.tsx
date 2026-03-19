@@ -15,7 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-
+import { getTenderConfig } from '@/lib/tender-data'
 // ─── Types ─────────────────────────────────────────────────────────────
 
 type ViewMode = 'absolute' | 'per-kwp' | 'pct-total'
@@ -52,6 +52,40 @@ type Supplier = {
 }
 
 // ─── Data ───────────────────────────────────────────────────────────────
+
+const PROJECT_PHOTOS = [
+  '/photos/Screenshot%202026-03-19%20at%2012.48.40.png',
+  '/photos/Screenshot%202026-03-19%20at%2012.48.45.png',
+  '/photos/Screenshot%202026-03-19%20at%2012.48.50.png',
+]
+
+// Overview data for projects without tender config
+const SOLAR_OVERVIEW = {
+  invited: 18,
+  submitted: 12,
+  responseRate: 67,
+  details: [
+    "3 didn't respond",
+    "2 missed the deadline",
+    "1 excluded (incomplete pricing)",
+    "12 submitted",
+  ],
+  closedDate: "28 Oct 2025",
+  duration: "21 days",
+}
+
+const LED_ROSTOCK_OVERVIEW = {
+  invited: 6,
+  submitted: 2,
+  responseRate: 33,
+  details: [
+    "2 didn't have capacity",
+    "2 didn't respond",
+    "2 submitted",
+  ],
+  closedDate: "15 Nov 2025",
+  duration: "14 days",
+}
 
 // Project 322 — Braehead — from breakdown.html, comparison.html
 const FULL_SCOPE_SUPPLIERS: Supplier[] = [
@@ -296,6 +330,7 @@ export function SupplierComparisonTable({
   const [cluster, setCluster] = React.useState<Cluster>('full-scope')
   const [mounted, setMounted] = React.useState(false)
   const [viewMode, setViewMode] = React.useState<ViewMode>('absolute')
+  const [showOverviewDetails, setShowOverviewDetails] = React.useState(false)
   const [intelligenceOn, setIntelligenceOn] = React.useState(false)
   const [selectedIds, setSelectedIds] = React.useState<Set<string>>(new Set())
   const [expandedIds, setExpandedIds] = React.useState<Set<string>>(new Set())
@@ -377,6 +412,14 @@ export function SupplierComparisonTable({
 
   const cfg = clusterConfig[cluster]
 
+  const overview =
+    projectType === 'led'
+      ? getTenderConfig('led')?.overview
+      : projectType === 'led-rostock'
+        ? LED_ROSTOCK_OVERVIEW
+        : SOLAR_OVERVIEW
+  const responseRate = overview ? `${overview.responseRate}% response rate` : ''
+
   return (
     <div className={cn('min-h-screen bg-cq-bg', selectedIds.size >= 2 && 'pb-20')}>
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -387,34 +430,35 @@ export function SupplierComparisonTable({
           </h1>
         </header>
 
-        {/* Project info — icon + title + address + tags + metrics */}
-        <div className="mb-6">
-          <div className="flex items-start gap-3 mb-5">
-            <Image
-              src={(projectType === 'led' || projectType === 'led-rostock') ? '/site elements/Avatar.svg' : '/site elements/solar.svg'}
-              alt=""
-              width={40}
-              height={40}
-              className="flex-shrink-0 rounded-lg"
-            />
-            <div>
-              <h2 className="text-xl font-extrabold text-cq-text leading-tight">
-                {projectType === 'led'
-                  ? 'Project 310 — Alexanderstraße 1/3/5'
-                  : projectType === 'led-rostock'
-                    ? 'tender_651_650 — Doberaner Straße 114-116'
-                    : 'Project 322 — Braehead'}
-              </h2>
-              <p className="text-sm text-cq-text-secondary mt-0.5">
-                {projectType === 'led'
-                  ? 'Berlin, 2,494 luminaires'
-                  : projectType === 'led-rostock'
-                    ? 'Rostock, 2 suppliers (490 / 1,029 luminaires)'
-                    : 'Shopping centre, LL1–LL3, Red Parking, car park roofs'}
-              </p>
+        {/* Project info — icon + title + address + tags + photos on right */}
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start gap-3 mb-5">
+              <Image
+                src={(projectType === 'led' || projectType === 'led-rostock') ? '/site elements/Avatar.svg' : '/site elements/solar.svg'}
+                alt=""
+                width={40}
+                height={40}
+                className="flex-shrink-0 rounded-lg"
+              />
+              <div>
+                <h2 className="text-xl font-extrabold text-cq-text leading-tight">
+                  {projectType === 'led'
+                    ? 'Project 310 — Alexanderstraße 1/3/5'
+                    : projectType === 'led-rostock'
+                      ? 'tender_651_650 — Doberaner Straße 114-116'
+                      : 'Project 322 — Braehead'}
+                </h2>
+                <p className="text-sm text-cq-text-secondary mt-0.5">
+                  {projectType === 'led'
+                    ? 'Berlin, 2,494 luminaires'
+                    : projectType === 'led-rostock'
+                      ? 'Rostock, 2 suppliers (490 / 1,029 luminaires)'
+                      : 'Shopping centre, LL1–LL3, Red Parking, car park roofs'}
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-wrap gap-4 mb-8">
+            <div className="flex flex-wrap gap-4">
             {((projectType === 'led' || projectType === 'led-rostock')
               ? ['Commercial', 'Occupied', 'LED Retrofit']
               : ['Residential', 'Occupied', '> 70kW Solar']
@@ -427,7 +471,71 @@ export function SupplierComparisonTable({
               </span>
             ))}
           </div>
+          </div>
+          <div className="flex gap-2 shrink-0">
+            {PROJECT_PHOTOS.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt={`Project photo ${i + 1}`}
+                className="w-48 h-24 rounded-lg border border-cq-border object-cover"
+              />
+            ))}
+          </div>
         </div>
+
+        {/* Tender Overview */}
+        {overview && (
+          <div className="mb-6 flex flex-col items-start gap-4 p-4 rounded-lg border border-cq-border bg-white">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between w-full">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-4 mb-2">
+                  <div className="font-bold text-cq-text">Tender Overview:</div>
+                  <button
+                    onClick={() => setShowOverviewDetails((v) => !v)}
+                    className="text-sm text-[#1C75BC] hover:underline font-bold flex items-center gap-1"
+                  >
+                    {showOverviewDetails ? (
+                      <>
+                        Hide details
+                        <ChevronUp className="h-4 w-4" />
+                      </>
+                    ) : (
+                      <>
+                        Show details
+                        <ChevronDown className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
+                <div className="text-sm text-cq-text-secondary">
+                  <span className="font-semibold">{overview.submitted}</span> of{" "}
+                  <span className="font-semibold">{overview.invited}</span> suppliers submitted (
+                  <span className="font-semibold">{responseRate}</span>)
+                </div>
+                {showOverviewDetails && (
+                  <div className="mt-3 flex flex-col items-start gap-4 p-3 rounded-lg border border-cq-border bg-cq-bg self-stretch w-full">
+                    <ul className="list-disc pl-6 space-y-1 text-sm text-cq-text-secondary">
+                      {overview.details.map((detail) => (
+                        <li key={detail}>{detail}</li>
+                      ))}
+                    </ul>
+                    <div className="text-sm text-cq-text-secondary">
+                      <span>Tender closed: {overview.closedDate}</span>
+                      <span className="mx-2">|</span>
+                      <span>Duration: {overview.duration}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="md:ml-6">
+                <div className="flex h-6 px-3 items-center gap-1 rounded-[20px] border border-[#1C75BC] bg-[#1C75BC] text-white font-bold text-sm">
+                  Closed: {overview.closedDate}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Cluster tabs — hide for LED. Defer Radix Tabs to client to avoid hydration mismatch. */}
         <div className="mt-6">

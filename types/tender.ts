@@ -97,6 +97,7 @@ export type TenderConfig = {
   tags: string[]
   overview: TenderOverview
   projectDetails?: ProjectDetails
+  projectPhotos?: string[]
   suppliers: Supplier[]
   categories: Category[]
   fieldExplanations: Record<string, string>
