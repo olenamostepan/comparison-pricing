@@ -273,6 +273,7 @@ const VIEW_COL_WIDTH = '6rem'
 const NOTE_COL_WIDTH = 'minmax(16rem, min(36rem, min(55vw, 90ch)))'
 const SUPPLIER_TABLE_GRID_TEMPLATE = `3rem minmax(0, min(260px, 36vw)) repeat(3, ${NUMERIC_COL_WIDTH}) ${QUALITY_COL_WIDTH} ${NOTE_COL_WIDTH} ${VIEW_COL_WIDTH}`
 
+const BREAKDOWN_PIE_COLORS = ['#126e53', '#29b273', '#239f63', '#1c75bc', '#4d5761', '#9ca3af']
 
 // ─── Sub-components ────────────────────────────────────────────────────
 
@@ -715,21 +716,21 @@ export function SupplierComparisonTable({
                     <th className="py-3 px-2 text-center align-middle">
                       <span className="sr-only">Select</span>
                     </th>
-                    <th className="text-left py-3 pl-4 pr-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle">
+                    <th className="text-left py-3 pl-4 pr-6 font-normal text-cq-text-secondary text-sm align-middle">
                       Supplier
                     </th>
-                    <th className="text-left py-3 px-3 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle tabular-nums">
+                    <th className="text-left py-3 px-3 font-normal text-cq-text-secondary text-sm align-middle tabular-nums">
                       {(projectType === 'led' || projectType === 'led-rostock') ? '€/luminaire' : '£/kWp'}
                     </th>
-                    <th className="text-right py-3 px-3 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle tabular-nums">
+                    <th className="text-right py-3 px-3 font-normal text-cq-text-secondary text-sm align-middle tabular-nums">
                       Total
                     </th>
-                    <th className="text-right py-3 pl-3 pr-8 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle tabular-nums">
+                    <th className="text-right py-3 pl-3 pr-8 font-normal text-cq-text-secondary text-sm align-middle tabular-nums">
                       System
                     </th>
                     <th className="align-middle">
                       <div className="flex items-center justify-center gap-1 py-3 pl-10 pr-10">
-                        <span className="font-semibold text-cq-text-secondary text-xs uppercase tracking-wider">
+                        <span className="font-normal text-cq-text-secondary text-sm">
                           Quality
                         </span>
                         <div className="flex flex-col items-center gap-0">
@@ -764,10 +765,10 @@ export function SupplierComparisonTable({
                         </div>
                       </div>
                     </th>
-                    <th className="text-left py-3 pl-8 pr-8 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle">
+                    <th className="text-left py-3 pl-8 pr-8 font-normal text-cq-text-secondary text-sm align-middle">
                       Note
                     </th>
-                    <th className="text-left py-3 pl-6 pr-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle">
+                    <th className="text-left py-3 pl-6 pr-6 font-normal text-cq-text-secondary text-sm align-middle">
                       View
                     </th>
                   </tr>
@@ -819,6 +820,17 @@ export function SupplierComparisonTable({
                             { key: 'commission' as const, label: 'Commission' },
                             { key: 'om' as const, label: 'O&M' },
                           ]
+
+                    const breakdownPieData =
+                      expandedOpen && row.breakdown
+                        ? breakdownCols
+                            .map(({ key, label }, i) => ({
+                              name: label,
+                              value: row.breakdown![key] ?? 0,
+                              fill: BREAKDOWN_PIE_COLORS[i % BREAKDOWN_PIE_COLORS.length],
+                            }))
+                            .filter((d) => d.value > 0)
+                        : []
 
                     const isLastRow = rowIndex === suppliers.length - 1
 
@@ -961,15 +973,8 @@ export function SupplierComparisonTable({
                               >
                                 <div aria-hidden className="min-w-0" />
                                 <div className="col-span-7 min-w-0 pl-4 pr-6">
-                                  <div className="pl-5">
-                                    <div
-                                      className={cn(
-                                        'grid gap-x-6 gap-y-2 w-full',
-                                        projectType === 'led' || projectType === 'led-rostock'
-                                          ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'
-                                          : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6'
-                                      )}
-                                    >
+                                  <div className="flex max-w-full flex-col gap-6 pl-4 sm:flex-row sm:items-start sm:gap-12">
+                                    <div className="grid min-w-0 [grid-template-columns:max-content_minmax(0,1fr)] items-baseline gap-x-4 gap-y-2">
                                       {breakdownCols.map(({ key, label }) => {
                                         const val = row.breakdown?.[key]
                                         const suffix =
@@ -979,17 +984,67 @@ export function SupplierComparisonTable({
                                             ? '+'
                                             : ''
                                         return (
-                                          <div key={key}>
-                                            <div className="text-xs text-cq-text-secondary uppercase tracking-wider mb-0.5">
+                                          <React.Fragment key={key}>
+                                            <span className="text-sm font-normal text-cq-text-secondary">
                                               {label}
-                                            </div>
-                                            <div className="font-semibold tabular-nums text-cq-text text-sm">
+                                            </span>
+                                            <span className="min-w-0 font-semibold tabular-nums text-cq-text text-sm">
                                               {formatBreakdownValue(val, suffix)}
-                                            </div>
-                                          </div>
+                                            </span>
+                                          </React.Fragment>
                                         )
                                       })}
                                     </div>
+                                    {breakdownPieData.length > 0 && (
+                                      <div
+                                        className="flex shrink-0 items-center justify-center self-center sm:justify-start sm:self-start"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        <ChartContainer
+                                          id={`supplier-breakdown-${row.id}`}
+                                          config={Object.fromEntries(
+                                            breakdownPieData.map((d) => [
+                                              d.name,
+                                              { label: d.name, color: d.fill },
+                                            ])
+                                          )}
+                                          className="h-[152px] w-[152px] sm:h-[164px] sm:w-[164px]"
+                                        >
+                                          <PieChart>
+                                            <Pie
+                                              data={breakdownPieData}
+                                              dataKey="value"
+                                              nameKey="name"
+                                              cx="50%"
+                                              cy="50%"
+                                              innerRadius={44}
+                                              outerRadius={66}
+                                              paddingAngle={2}
+                                            >
+                                              {breakdownPieData.map((d, i) => (
+                                                <Cell key={i} fill={d.fill} />
+                                              ))}
+                                            </Pie>
+                                            <RechartsTooltip
+                                              content={({ active, payload }) =>
+                                                active && payload?.[0] ? (
+                                                  <div className="rounded-lg border border-cq-border bg-white px-3 py-2 text-sm shadow-sm">
+                                                    <p className="font-semibold text-cq-text">
+                                                      {String(payload[0].name)}
+                                                    </p>
+                                                    <p className="text-cq-text-secondary">
+                                                      {formatAmount(
+                                                        payload[0].value as number
+                                                      )}
+                                                    </p>
+                                                  </div>
+                                                ) : null
+                                              }
+                                            />
+                                          </PieChart>
+                                        </ChartContainer>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               </div>
