@@ -29,7 +29,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
       <header className="bg-white border-b border-[#F3F4F6]">
-        <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-2">
+        <div className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10 py-6 flex flex-col gap-2">
           <p className="text-sm text-[#4D5761] font-semibold uppercase tracking-wide">CQuel Prototype Library</p>
           <h1 className="text-[32px] font-extrabold text-[#1E2832] leading-tight">
             Pick a tender scenario to explore
@@ -40,7 +40,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-10">
+      <main className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10 py-10">
         <div className="grid gap-6 md:grid-cols-2 max-w-2xl">
           {projects.map((project) => (
             <Link

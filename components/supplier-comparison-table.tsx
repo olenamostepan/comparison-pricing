@@ -64,14 +64,13 @@ const PROJECT_PHOTOS = [
 
 // Overview data for projects without tender config
 const SOLAR_OVERVIEW = {
-  invited: 18,
-  submitted: 12,
-  responseRate: 67,
+  invited: 8,
+  submitted: 6,
+  responseRate: 75,
   details: [
-    "3 didn't respond",
-    "2 missed the deadline",
+    "1 didn't respond",
     "1 excluded (incomplete pricing)",
-    "12 submitted",
+    "6 submitted",
   ],
   closedDate: "28 Oct 2025",
   duration: "21 days",
@@ -111,104 +110,92 @@ function parseOverviewDetails(details: string[], invited: number): { name: strin
     .filter((x): x is { name: string; value: number; pct: number } => x !== null)
 }
 
-// Project 322 — Braehead — from breakdown.html, comparison.html
+// Multi-supplier CapEx comparison (representative submission notes)
 const FULL_SCOPE_SUPPLIERS: Supplier[] = [
-  {
-    id: 'green-nation',
-    name: 'Green Nation',
-    badge: 'Rank #5',
-    totalPounds: 2_070_513,
-    perKwp: 518,
-    systemKwp: 3997,
-    quality: 1,
-    transparency: 4,
-    note: { type: 'warn', text: 'PDF total (£2.18M) is £112k higher than cost_estimated (£2.07M)—clarify which applies' },
-    hasEstimates: true,
-    breakdown: { equipment: 1_181_031, labour: 1_124_459, overheads: 333_223, om: 5_286 },
-  },
-  {
-    id: 'arin-power',
-    name: 'Arin Power',
-    badge: 'Rank #6',
-    totalPounds: 2_295_708,
-    perKwp: 574,
-    systemKwp: 3997,
-    quality: 2,
-    transparency: 3,
-    note: { type: 'warn', text: 'Scaffolding explicitly excluded—add £150–300k for true comparability' },
-    breakdown: { equipment: 817_673, labour: 921_520, overheads: 87_000, om: 19_800 },
-  },
-  {
-    id: 'sustain',
-    name: 'Sustain',
-    badge: 'Most transparent',
-    linkedNote: 'via SNRG (same EPC)',
-    totalPounds: 2_425_568,
-    perKwp: 607,
-    systemKwp: 3997,
-    quality: 1,
-    transparency: 4,
-    hasEstimates: true,
-    breakdown: { equipment: 1_020_467, labour: 1_032_768, overheads: 353_026, om: 33_976 },
-  },
-  {
-    id: 'green-volt',
-    name: 'Green Volt',
-    badge: 'Rank #8',
-    totalPounds: 2_657_373,
-    perKwp: 589,
-    systemKwp: 4513,
-    quality: 2,
-    transparency: 3,
-    note: { type: 'warn', text: 'PDF categories sum to £2.17M but cost_estimated £2.66M—£485k gap unaccounted' },
-    breakdown: { equipment: 1_517_000, labour: 560_000, overheads: 95_000, om: 25_500 },
-  },
-  {
-    id: 'ortus',
-    name: 'Ortus Energy',
-    totalPounds: 2_803_005,
-    perKwp: 701,
-    systemKwp: 3996,
-    quality: 3,
-    transparency: 2,
-    note: { type: 'warn', text: 'No breakdown provided; PPA/CapEx classification ambiguous' },
-    breakdown: { equipment: undefined, labour: undefined, overheads: undefined, om: 47_952 },
-  },
   {
     id: 'electron-green',
     name: 'Electron Green',
-    badge: 'Rank #9',
-    totalPounds: 2_830_049,
-    perKwp: 708,
-    systemKwp: 3996,
-    quality: 3,
-    transparency: 1,
-    note: { type: 'warn', text: 'No breakdown; description references Lakeside—cross-project submission' },
-    breakdown: { equipment: undefined, labour: undefined, overheads: undefined, om: 25_000 },
+    totalPounds: 357_330,
+    perKwp: 645,
+    systemKwp: 554,
+    quality: 2,
+    transparency: 3,
+    note: {
+      type: 'info',
+      text: 'Mid-to-high price submission at £645/kWp for a 554 kWp system; pricing is category-level only with no itemised PDF, making independent verification difficult. Includes proprietary SAM monitoring platform.',
+    },
+    breakdown: { equipment: 160_000, labour: 125_000, overheads: 60_000, om: 12_330 },
   },
   {
-    id: 'shawton',
-    name: 'Shawton Energy',
-    badge: 'PPA',
-    totalPounds: 3_449_203,
-    perKwp: 863,
-    systemKwp: 3996,
-    quality: 3,
-    transparency: 2,
-    note: { type: 'warn', text: 'PPA offer; capex figure is indicative benchmark, not client purchase price' },
-    breakdown: { equipment: undefined, labour: undefined, overheads: undefined, om: 39_960 },
-  },
-  {
-    id: 'ees',
-    name: 'EES Group',
-    badge: 'Different scope',
-    totalPounds: 4_299_607,
-    perKwp: 1184,
-    systemKwp: 3630,
+    id: 'sustain-commercial-solar',
+    name: 'Sustain Commercial Solar',
+    totalPounds: 272_506,
+    perKwp: 611,
+    systemKwp: 446,
     quality: 1,
     transparency: 4,
-    note: { type: 'info', text: 'Includes batteries + RC62 fire protection; solar-only cost would be lower' },
-    breakdown: { equipment: 2_066_800, labour: 1_533_606, overheads: 811_494, om: 36_940 },
+    note: {
+      type: 'info',
+      text: 'Competitive submission with detailed spreadsheet; 446 kWp system is the smallest in the field, which drives the lower absolute price. £/kWp of £611 is mid-range. In-house installation teams and efficient panel procurement are key cost drivers.',
+    },
+    breakdown: { equipment: 122_000, labour: 95_000, overheads: 41_000, om: 14_506 },
+  },
+  {
+    id: 'low-carbon-energy-company',
+    name: 'The Low Carbon Energy Company Ltd',
+    totalPounds: 231_084,
+    perKwp: 588,
+    systemKwp: 393,
+    quality: 1,
+    transparency: 4,
+    note: {
+      type: 'info',
+      text: 'Lowest absolute price but also smallest system (393 kWp); highest transparency with fully itemised spreadsheet. Labour cost is disproportionately high relative to materials, suggesting a labour-intensive installation approach or conservative labour pricing.',
+    },
+    breakdown: { equipment: 104_000, labour: 81_000, overheads: 35_000, om: 11_084 },
+  },
+  {
+    id: 'ortus-energy-ltd',
+    name: 'Ortus Energy Ltd.',
+    totalPounds: 373_396,
+    perKwp: 674,
+    systemKwp: 554,
+    quality: 1,
+    transparency: 4,
+    note: {
+      type: 'info',
+      text: 'Highest £/kWp submission at £674, partly due to the 7% CQUEL fee (£24,427) included in the client-facing total; underlying Ortus budget is £348,960 (£629/kWp). H&S and access costs are the highest in the field at £79,574 combined.',
+    },
+    breakdown: { equipment: 168_000, labour: 131_000, overheads: 60_000, om: 14_396 },
+  },
+  {
+    id: 'evo-energy',
+    name: 'Evo Energy',
+    badge: 'Lowest price/kWp',
+    totalPounds: 293_620,
+    perKwp: 530,
+    systemKwp: 554,
+    quality: 1,
+    transparency: 4,
+    note: {
+      type: 'info',
+      text: 'Lowest £/kWp among the 554 kWp systems at £530; detailed PDF breakdown provided. Notable for the highest panel count (1,218 x 455Wp) and highest material cost, offset by competitive labour and overhead rates. No separate electrical works line — AC/DC cabling included in materials.',
+    },
+    breakdown: { equipment: 132_000, labour: 103_000, overheads: 47_000, om: 11_620 },
+  },
+  {
+    id: 'oracle-energy',
+    name: 'Oracle Energy',
+    totalPounds: 306_900,
+    perKwp: 550,
+    systemKwp: 558,
+    quality: 2,
+    transparency: 3,
+    note: {
+      type: 'info',
+      text: 'Mid-range submission at £550/kWp for the largest system (558 kWp); very high materials allocation (£224,660) relative to labour (£33,793) suggests either bundled subcontractor labour within materials or a lean in-house labour model. No itemised breakdown provided.',
+    },
+    breakdown: { equipment: 200_000, labour: 80_000, overheads: undefined, om: 26_900 },
   },
 ]
 
@@ -277,6 +264,15 @@ function formatKwp(n: number, projectType?: ProjectType): string {
   if (projectType === 'led' || projectType === 'led-rostock') return `${n.toLocaleString()} luminaires`
   return `${n.toLocaleString()} kWp`
 }
+
+/** Supplier column capped; £/kWp / Total / System equal width. Note capped (no 1fr). Quality given extra width + padding vs System. */
+const NUMERIC_COL_WIDTH = '7rem'
+const QUALITY_COL_WIDTH = '7.5rem'
+const VIEW_COL_WIDTH = '6rem'
+/** Capped so long notes wrap; extra row width flows to Supplier column (minmax). */
+const NOTE_COL_WIDTH = 'minmax(16rem, min(36rem, min(55vw, 90ch)))'
+const SUPPLIER_TABLE_GRID_TEMPLATE = `3rem minmax(0, min(260px, 36vw)) repeat(3, ${NUMERIC_COL_WIDTH}) ${QUALITY_COL_WIDTH} ${NOTE_COL_WIDTH} ${VIEW_COL_WIDTH}`
+
 
 // ─── Sub-components ────────────────────────────────────────────────────
 
@@ -423,9 +419,9 @@ export function SupplierComparisonTable({
 
   const clusterConfig = {
     'full-scope': {
-      label: 'Full-Scope Systems (3,630–4,513 kWp)',
-      count: 8,
-      description: '8 suppliers covering most or all roof zones',
+      label: 'Full-Scope Systems (393–558 kWp)',
+      count: 6,
+      description: '6 comparable CapEx submissions',
     },
     smaller: {
       label: 'Smaller Systems (1,670–2,333 kWp)',
@@ -446,7 +442,7 @@ export function SupplierComparisonTable({
 
   return (
     <div className={cn('min-h-screen bg-cq-bg', selectedIds.size >= 2 && 'pb-20')}>
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10 py-8">
         {/* Header */}
         <header className="mb-6">
           <h1 className="text-xl font-extrabold text-cq-text leading-tight">
@@ -640,7 +636,7 @@ export function SupplierComparisonTable({
             )
           )}
 
-          {/* Controls row — breakdown view filter (applies to expanded dropdown only) */}
+          {/* Controls row — breakdown view filter (applies to expanded card only) */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
             <div className="flex items-center gap-2">
               <span className="text-sm text-cq-text-secondary">Breakdown view:</span>
@@ -703,26 +699,36 @@ export function SupplierComparisonTable({
           {/* Table */}
           <div className="rounded-xl border border-cq-border bg-white overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full table-fixed text-sm">
+                <colgroup>
+                  <col style={{ width: '3rem' }} />
+                  <col style={{ width: 'min(260px, 36vw)', maxWidth: 'min(260px, 36vw)' }} />
+                  <col style={{ width: NUMERIC_COL_WIDTH }} />
+                  <col style={{ width: NUMERIC_COL_WIDTH }} />
+                  <col style={{ width: NUMERIC_COL_WIDTH }} />
+                  <col style={{ width: QUALITY_COL_WIDTH }} />
+                  <col style={{ width: 'clamp(16rem, 42vw, 36rem)' }} />
+                  <col style={{ width: VIEW_COL_WIDTH }} />
+                </colgroup>
                 <thead>
                   <tr className="border-b border-cq-border bg-cq-bg">
-                    <th className="w-12 py-3 px-2 text-center">
+                    <th className="py-3 px-2 text-center align-middle">
                       <span className="sr-only">Select</span>
                     </th>
-                    <th className="text-left py-3 px-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider">
+                    <th className="text-left py-3 pl-4 pr-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle">
                       Supplier
                     </th>
-                    <th className="text-right py-3 px-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider w-20">
+                    <th className="text-left py-3 px-3 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle tabular-nums">
                       {(projectType === 'led' || projectType === 'led-rostock') ? '€/luminaire' : '£/kWp'}
                     </th>
-                    <th className="text-right py-3 px-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider w-24">
+                    <th className="text-right py-3 px-3 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle tabular-nums">
                       Total
                     </th>
-                    <th className="text-right py-3 px-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider w-36">
+                    <th className="text-right py-3 pl-3 pr-8 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle tabular-nums">
                       System
                     </th>
-                    <th className="w-24">
-                      <div className="flex items-center justify-center gap-1 py-3 px-6">
+                    <th className="align-middle">
+                      <div className="flex items-center justify-center gap-1 py-3 pl-10 pr-10">
                         <span className="font-semibold text-cq-text-secondary text-xs uppercase tracking-wider">
                           Quality
                         </span>
@@ -758,16 +764,16 @@ export function SupplierComparisonTable({
                         </div>
                       </div>
                     </th>
-                    <th className="text-left py-3 px-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider min-w-[180px]">
+                    <th className="text-left py-3 pl-8 pr-8 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle">
                       Note
                     </th>
-                    <th className="text-left py-3 px-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider w-16">
+                    <th className="text-left py-3 pl-6 pr-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider align-middle">
                       View
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {suppliers.flatMap((row) => {
+                  {suppliers.map((row, rowIndex) => {
                     const isExpanded = expandedIds.has(row.id)
                     const hasBreakdown = row.breakdown != null
                     const breakdownSum = row.breakdown
@@ -795,161 +801,221 @@ export function SupplierComparisonTable({
                       return formatAmount(n) + suffix
                     }
 
-                    return [
-                      <tr
-                        key={row.id}
-                        role={hasBreakdown ? 'button' : undefined}
-                        tabIndex={hasBreakdown ? 0 : undefined}
-                        onClick={hasBreakdown ? () => toggleExpand(row.id) : undefined}
-                        onKeyDown={
-                          hasBreakdown
-                            ? (e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                  e.preventDefault()
-                                  toggleExpand(row.id)
-                                }
+                    const expandedOpen = isExpanded && hasBreakdown
+                    const breakdownCols =
+                      projectType === 'led' || projectType === 'led-rostock'
+                        ? [
+                            { key: 'equipment' as const, label: 'Equipment' },
+                            { key: 'labour' as const, label: 'Labour' },
+                            { key: 'overheads' as const, label: 'Overheads' },
+                            { key: 'materials' as const, label: 'Materials' },
+                            { key: 'commission' as const, label: 'Commissioning & Assurance' },
+                          ]
+                        : [
+                            { key: 'equipment' as const, label: 'Equipment' },
+                            { key: 'labour' as const, label: 'Labour' },
+                            { key: 'overheads' as const, label: 'Overheads' },
+                            { key: 'design' as const, label: 'Design' },
+                            { key: 'commission' as const, label: 'Commission' },
+                            { key: 'om' as const, label: 'O&M' },
+                          ]
+
+                    const isLastRow = rowIndex === suppliers.length - 1
+
+                    return (
+                      <tr key={row.id} className={cn(!expandedOpen && 'border-b border-cq-border')}>
+                        <td colSpan={8} className="p-0 align-top">
+                          <div
+                            className={cn(
+                              'transition-colors min-w-[52rem]',
+                              !isLastRow && 'mb-4',
+                              expandedOpen
+                                ? cn(
+                                    'rounded-lg border border-cq-border border-l-[3px] border-l-[var(--cq-link)] shadow-sm overflow-hidden',
+                                    selectedIds.has(row.id)
+                                      ? 'bg-slate-200/70 group-hover:bg-slate-200'
+                                      : 'bg-slate-100 group-hover:bg-slate-200/70',
+                                    'group'
+                                  )
+                                : cn(
+                                    selectedIds.has(row.id) && 'bg-cq-green/5',
+                                    !selectedIds.has(row.id) && 'hover:bg-cq-bg/50'
+                                  )
+                            )}
+                          >
+                            <div
+                              role={hasBreakdown ? 'button' : undefined}
+                              tabIndex={hasBreakdown ? 0 : undefined}
+                              aria-expanded={hasBreakdown ? isExpanded : undefined}
+                              onClick={hasBreakdown ? () => toggleExpand(row.id) : undefined}
+                              onKeyDown={
+                                hasBreakdown
+                                  ? (e) => {
+                                      if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault()
+                                        toggleExpand(row.id)
+                                      }
+                                    }
+                                  : undefined
                               }
-                            : undefined
-                        }
-                        className={cn(
-                          'border-b border-cq-border hover:bg-cq-bg/50 transition-colors',
-                          selectedIds.has(row.id) && 'bg-cq-green/5',
-                          hasBreakdown && 'cursor-pointer'
-                        )}
-                      >
-                        <td
-                          className="py-3 px-2 text-center"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Checkbox
-                            checked={selectedIds.has(row.id)}
-                            onCheckedChange={() => toggleSelection(row.id)}
-                            aria-label={`Select ${row.name}`}
-                          />
-                        </td>
-                        <td className="py-3 px-6 min-w-[140px]">
-                          <div className="flex flex-col gap-0.5">
-                            <span className="flex items-center gap-1.5 min-w-0">
-                              {hasBreakdown &&
-                                (isExpanded ? (
-                                  <ChevronDown className="w-4 h-4 text-cq-text-secondary shrink-0" />
-                                ) : (
-                                  <ChevronRight className="w-4 h-4 text-cq-text-secondary shrink-0" />
-                                ))}
-                              <span className="font-semibold text-cq-text whitespace-nowrap">
-                                {row.name}
-                              </span>
-                            </span>
-                        </div>
-                      </td>
-                      <td
-                        className={cn(
-                          'py-3 px-6 text-right tabular-nums font-bold text-cq-text'
-                        )}
-                      >
-                        {currency === 'eur' ? '€' : '£'}{row.perKwp.toLocaleString()}
-                      </td>
-                      <td className="py-3 px-6 text-right tabular-nums text-cq-text">
-                        {formatAmount(row.totalPounds)}
-                      </td>
-                      <td className="py-3 px-6 text-right tabular-nums text-cq-text">
-                        {formatKwp(row.systemKwp, projectType)}
-                      </td>
-                      <td className="py-3 px-6" onClick={(e) => e.stopPropagation()}>
-                        <QualityBadge quality={row.quality} />
-                      </td>
-                      <td className="py-3 px-6">
-                        <div className="flex flex-wrap items-center gap-2">
-                          {row.hasEstimates && intelligenceOn && (
-                            <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-cq-green/20 text-cq-green">
-                              has estimates
-                            </span>
-                          )}
-                          {row.note && (
-                            <span className="inline-flex items-center gap-1 text-[12px] text-cq-text-secondary">
-                              {row.note.type === 'warn' ? '⚠️' : 'ℹ️'} {row.note.text}
-                            </span>
-                          )}
-                          {!row.note && row.linkedNote && (
-                            <span className="inline-flex items-center gap-1 text-[12px] text-cq-text-secondary">
-                              ℹ️ {row.linkedNote}
-                            </span>
-                          )}
-                          {!row.note && !row.linkedNote && !(row.hasEstimates && intelligenceOn) && (
-                            <span className="text-cq-muted">—</span>
-                          )}
-                        </div>
-                      </td>
-                      <td
-                        className="py-3 px-6"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Link
-                          href={`${basePath}/${row.id}`}
-                          className="font-bold text-cq-link hover:underline"
-                        >
-                          View
-                        </Link>
-                      </td>
-                    </tr>,
-                      isExpanded &&
-                        hasBreakdown && (() => {
-                          const breakdownCols = (projectType === 'led' || projectType === 'led-rostock')
-                            ? [
-                                { key: 'equipment' as const, label: 'Equipment' },
-                                { key: 'labour' as const, label: 'Labour' },
-                                { key: 'overheads' as const, label: 'Overheads' },
-                                { key: 'materials' as const, label: 'Materials' },
-                                { key: 'commission' as const, label: 'Commissioning & Assurance' },
-                              ]
-                            : [
-                                { key: 'equipment' as const, label: 'Equipment' },
-                                { key: 'labour' as const, label: 'Labour' },
-                                { key: 'overheads' as const, label: 'Overheads' },
-                                { key: 'design' as const, label: 'Design' },
-                                { key: 'commission' as const, label: 'Commission' },
-                                { key: 'om' as const, label: 'O&M' },
-                              ]
-                          return (
-                            <tr key={`${row.id}-breakdown`} className="border-b border-cq-border bg-cq-link/5">
-                              <td colSpan={9} className="p-0 align-top border-l-4 border-cq-link/40">
-                                <div className="w-full pl-[4.5rem] pr-6 py-3">
-                                  <div className={cn(
-                                    'grid gap-x-6 gap-y-2 w-full',
-                                    (projectType === 'led' || projectType === 'led-rostock')
-                                      ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'
-                                      : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6'
-                                  )}>
-                                    {breakdownCols.map(({ key, label }) => {
-                                      const val = row.breakdown?.[key]
-                                      const suffix = key === 'equipment' && row.breakdown?.design == null && row.breakdown?.commission == null ? '+' : ''
-                                      return (
-                                        <div key={key}>
-                                          <div className="text-xs text-cq-text-secondary uppercase tracking-wider mb-0.5">{label}</div>
-                                          <div className="font-semibold tabular-nums text-cq-text text-sm">
-                                            {formatBreakdownValue(val, suffix)}
+                              className={cn(
+                                'grid w-full items-center gap-x-0 text-sm',
+                                hasBreakdown && 'cursor-pointer'
+                              )}
+                              style={{ gridTemplateColumns: SUPPLIER_TABLE_GRID_TEMPLATE }}
+                            >
+                              <div
+                                className="py-3 px-2 text-center"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <span className="inline-flex">
+                                  <Checkbox
+                                    checked={selectedIds.has(row.id)}
+                                    onCheckedChange={() => toggleSelection(row.id)}
+                                    aria-label={`Select ${row.name}`}
+                                  />
+                                </span>
+                              </div>
+                              <div className="py-3 pl-4 pr-6 min-w-0">
+                                <div className="flex flex-col gap-0.5">
+                                  <span className="flex items-start gap-1 min-w-0">
+                                    {hasBreakdown &&
+                                      (isExpanded ? (
+                                        <ChevronDown className="w-4 h-4 text-cq-text-secondary shrink-0 mt-0.5" />
+                                      ) : (
+                                        <ChevronRight className="w-4 h-4 text-cq-text-secondary shrink-0 mt-0.5" />
+                                      ))}
+                                    <span className="font-semibold text-cq-text min-w-0 break-words leading-snug">
+                                      {row.name}
+                                    </span>
+                                  </span>
+                                  {row.badge && (
+                                    <span
+                                      className={cn(
+                                        'text-xs font-medium text-cq-green',
+                                        hasBreakdown && 'pl-[calc(1rem+0.25rem)]'
+                                      )}
+                                    >
+                                      {row.badge}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="py-3 px-3 text-left tabular-nums font-bold text-cq-text">
+                                {currency === 'eur' ? '€' : '£'}
+                                {row.perKwp.toLocaleString()}
+                              </div>
+                              <div className="py-3 px-3 text-right tabular-nums text-cq-text">
+                                {formatAmount(row.totalPounds)}
+                              </div>
+                              <div className="py-3 pl-3 pr-8 text-right tabular-nums text-cq-text">
+                                {formatKwp(row.systemKwp, projectType)}
+                              </div>
+                              <div
+                                className="py-3 pl-10 pr-10 flex items-center justify-center"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <QualityBadge quality={row.quality} />
+                              </div>
+                              <div className="py-3 pl-8 pr-8 min-w-0 max-w-full">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  {row.hasEstimates && intelligenceOn && (
+                                    <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-cq-green/20 text-cq-green">
+                                      has estimates
+                                    </span>
+                                  )}
+                                  {row.note && (
+                                    <span className="inline-flex items-center gap-1 text-[12px] text-cq-text-secondary">
+                                      {row.note.type === 'warn' ? '⚠️' : 'ℹ️'} {row.note.text}
+                                    </span>
+                                  )}
+                                  {!row.note && row.linkedNote && (
+                                    <span className="inline-flex items-center gap-1 text-[12px] text-cq-text-secondary">
+                                      ℹ️ {row.linkedNote}
+                                    </span>
+                                  )}
+                                  {!row.note &&
+                                    !row.linkedNote &&
+                                    !(row.hasEstimates && intelligenceOn) && (
+                                      <span className="text-cq-muted">—</span>
+                                    )}
+                                </div>
+                              </div>
+                              <div
+                                className="py-3 pl-6 pr-6 text-left justify-self-start min-w-0"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Link
+                                  href={`${basePath}/${row.id}`}
+                                  className="font-bold text-cq-link hover:underline inline-block"
+                                >
+                                  View
+                                </Link>
+                              </div>
+                            </div>
+
+                            {expandedOpen && (
+                              <div
+                                className="border-t border-cq-border/70 py-3 grid gap-x-0"
+                                style={{ gridTemplateColumns: SUPPLIER_TABLE_GRID_TEMPLATE }}
+                              >
+                                <div aria-hidden className="min-w-0" />
+                                <div className="col-span-7 min-w-0 pl-4 pr-6">
+                                  <div className="pl-5">
+                                    <div
+                                      className={cn(
+                                        'grid gap-x-6 gap-y-2 w-full',
+                                        projectType === 'led' || projectType === 'led-rostock'
+                                          ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'
+                                          : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6'
+                                      )}
+                                    >
+                                      {breakdownCols.map(({ key, label }) => {
+                                        const val = row.breakdown?.[key]
+                                        const suffix =
+                                          key === 'equipment' &&
+                                          row.breakdown?.design == null &&
+                                          row.breakdown?.commission == null
+                                            ? '+'
+                                            : ''
+                                        return (
+                                          <div key={key}>
+                                            <div className="text-xs text-cq-text-secondary uppercase tracking-wider mb-0.5">
+                                              {label}
+                                            </div>
+                                            <div className="font-semibold tabular-nums text-cq-text text-sm">
+                                              {formatBreakdownValue(val, suffix)}
+                                            </div>
                                           </div>
-                                        </div>
-                                      )
-                                    })}
+                                        )
+                                      })}
+                                    </div>
                                   </div>
                                 </div>
-                              </td>
-                            </tr>
-                          )
-                        })(),
-                      isExpanded &&
-                        showWarning && (
-                          <tr key={`${row.id}-warn`} className="border-b border-cq-border bg-cq-link/5">
-                            <td colSpan={9} className="pl-[4.5rem] pr-6 py-3">
-                              <div className="flex items-start gap-1.5 text-[12px] text-cq-text-secondary w-full">
-                                <span className="text-cq-text-secondary">⚠️</span>
-                                <span>Breakdown accounts for {allocatedPct}% of total — {formatAmount(unallocated)} not allocated to categories</span>
                               </div>
-                            </td>
-                          </tr>
-                        ),
-                    ].filter(Boolean)
+                            )}
+
+                            {showWarning && (
+                              <div
+                                className="border-t border-cq-border/70 py-3 grid gap-x-0"
+                                style={{ gridTemplateColumns: SUPPLIER_TABLE_GRID_TEMPLATE }}
+                              >
+                                <div aria-hidden className="min-w-0" />
+                                <div className="col-span-7 min-w-0 pl-4 pr-6">
+                                  <div className="flex items-start gap-1.5 pl-5 text-[12px] text-cq-text-secondary w-full">
+                                    <span className="text-cq-text-secondary shrink-0">⚠️</span>
+                                    <span>
+                                      Breakdown accounts for {allocatedPct}% of total —{' '}
+                                      {formatAmount(unallocated)} not allocated to categories
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )
                   })}
                 </tbody>
               </table>
@@ -962,11 +1028,11 @@ export function SupplierComparisonTable({
               ? '7 CapEx submissions · ranked by €/luminaire'
               : projectType === 'led-rostock'
                 ? '2 CapEx submissions · ranked by €/luminaire'
-                : '12 CapEx submissions · 3 PPA excluded · ranked by £/kWp'}
+                : '6 CapEx submissions · ranked by £/kWp'}
           </footer>
           {(projectType !== 'led' && projectType !== 'led-rostock') && (
           <p className="mt-2 text-xs text-cq-text-secondary">
-            Shawton — PPA-only; Ortus, Electron Green — no breakdown. Power-Zero, SNRG excluded.
+            Notes reflect submission materials; expand rows for category breakdown where provided.
           </p>
           )}
         </div>
@@ -974,7 +1040,7 @@ export function SupplierComparisonTable({
         {/* Compare shortlisted bar */}
         {selectedIds.size >= 2 && (
           <div className="fixed bottom-0 left-0 right-0 z-10 border-t border-cq-border bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-            <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10 py-4 flex items-center justify-between">
               <p className="text-sm text-cq-text-secondary">
                 {selectedIds.size} supplier{selectedIds.size > 1 ? 's' : ''} selected
               </p>

@@ -77,7 +77,7 @@ export function TenderComparisonPage({ config }: TenderComparisonPageProps) {
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
       <header className="bg-white border-t border-b border-[#F3F4F6]">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10">
           <div className="flex justify-between items-center py-3">
             <Link href="/" className="flex items-center gap-2 hover:underline text-sm font-extrabold text-[#1E2832]">
               <ArrowLeft className="h-4 w-4" />
@@ -97,7 +97,7 @@ export function TenderComparisonPage({ config }: TenderComparisonPageProps) {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 pt-6 pb-3">
+      <div className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10 pt-6 pb-3">
         <div className="flex items-start gap-6 mb-4">
           <div className="flex items-start gap-4 flex-1 min-w-0">
             <div className="w-12 h-12 rounded flex items-center justify-center flex-shrink-0">
@@ -236,7 +236,7 @@ export function TenderComparisonPage({ config }: TenderComparisonPageProps) {
         </div>
       </div>
 
-  <main className="max-w-7xl mx-auto pt-0 px-6 pb-6">
+  <main className="w-full max-w-screen-2xl mx-auto pt-0 px-6 sm:px-8 lg:px-10 pb-6">
         <div
           className="flex flex-col items-start gap-4 self-stretch rounded-lg border border-[#F3F4F6] bg-white mb-8"
           style={{ padding: "32px 24px 16px 24px" }}

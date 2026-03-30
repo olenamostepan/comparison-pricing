@@ -102,7 +102,7 @@ export function DecisionComparisonView({
 
   return (
     <div className="min-h-screen bg-cq-bg">
-      <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10 py-4">
         <Link
           href={basePath}
           className="inline-block mb-2 text-sm font-bold text-cq-link hover:underline"

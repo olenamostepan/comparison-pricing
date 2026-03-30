@@ -19,7 +19,7 @@ export function ProjectSwitcher() {
 
   return (
     <div className="border-b border-cq-border bg-white">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+      <div className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10 py-3 flex items-center justify-between gap-4 flex-wrap">
         <Link
           href="/"
           className={cn(

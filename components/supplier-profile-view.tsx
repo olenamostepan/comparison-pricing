@@ -442,7 +442,7 @@ export function SupplierProfileView({
   return (
     <>
     <div className="min-h-screen bg-cq-bg">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10 py-8">
         {/* 1. Header */}
         <nav className="flex items-center gap-1.5 text-sm text-cq-text-secondary mb-4 font-medium">
           <Link
