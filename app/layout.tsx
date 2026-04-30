@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { ProjectSwitcher } from '@/components/project-switcher'
+import { ClarificationsProvider } from '@/lib/clarifications/store'
+import { RaiseClarificationModal } from '@/components/clarifications/RaiseClarificationModal'
+import { Toaster } from 'sonner'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -22,9 +25,13 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body className={`font-sans antialiased`}>
-        <ProjectSwitcher />
-        {children}
-        <Analytics />
+        <ClarificationsProvider>
+          <ProjectSwitcher />
+          {children}
+          <RaiseClarificationModal />
+          <Toaster position="bottom-right" />
+          <Analytics />
+        </ClarificationsProvider>
       </body>
     </html>
   )

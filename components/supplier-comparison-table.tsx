@@ -4,7 +4,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { Sparkles, ChevronDown, ChevronRight, ChevronUp } from 'lucide-react'
+import { Sparkles, ChevronDown, ChevronRight, ChevronUp, HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import * as Tabs from '@radix-ui/react-tabs'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
@@ -18,6 +18,12 @@ import {
 import { ChartContainer } from '@/components/ui/chart'
 import { PieChart, Pie, Tooltip as RechartsTooltip, Cell } from 'recharts'
 import { getTenderConfig } from '@/lib/tender-data'
+import {
+  clarificationBidId,
+  clarificationProjectLabel,
+  type ClarificationsProjectSlug,
+} from '@/lib/clarifications/mock-data'
+import { useClarifications } from '@/lib/clarifications/store'
 
 // ─── Types ─────────────────────────────────────────────────────────────
 
@@ -268,7 +274,7 @@ function formatKwp(n: number, projectType?: ProjectType): string {
 /** Supplier column capped; £/kWp / Total / System equal width. Note capped (no 1fr). Quality given extra width + padding vs System. */
 const NUMERIC_COL_WIDTH = '7rem'
 const QUALITY_COL_WIDTH = '7.5rem'
-const VIEW_COL_WIDTH = '6rem'
+const VIEW_COL_WIDTH = '7.5rem'
 /** Capped so long notes wrap; extra row width flows to Supplier column (minmax). */
 const NOTE_COL_WIDTH = 'minmax(16rem, min(36rem, min(55vw, 90ch)))'
 const SUPPLIER_TABLE_GRID_TEMPLATE = `3rem minmax(0, min(260px, 36vw)) repeat(3, ${NUMERIC_COL_WIDTH}) ${QUALITY_COL_WIDTH} ${NOTE_COL_WIDTH} ${VIEW_COL_WIDTH}`
@@ -348,6 +354,7 @@ export function SupplierComparisonTable({
   projectType?: ProjectType
 } = {}) {
   const router = useRouter()
+  const { openRaiseModal } = useClarifications()
   const [cluster, setCluster] = React.useState<Cluster>('full-scope')
   const [mounted, setMounted] = React.useState(false)
   const [viewMode, setViewMode] = React.useState<ViewMode>('absolute')
@@ -410,6 +417,7 @@ export function SupplierComparisonTable({
         : '/supplier-comparison'
   const currency = (projectType === 'led' || projectType === 'led-rostock') ? 'eur' as const : 'gbp' as const
   const formatAmount = (n: number) => formatPounds(n, currency)
+  const clarificationSlug = projectType as ClarificationsProjectSlug
   const handleCompare = () => {
     const ids = Array.from(selectedIds)
     if (ids.length >= 2) {
@@ -954,12 +962,29 @@ export function SupplierComparisonTable({
                                 </div>
                               </div>
                               <div
-                                className="py-3 pl-6 pr-6 text-left justify-self-start min-w-0"
+                                className="flex items-center gap-2 py-3 pl-4 pr-4 text-left justify-self-start min-w-0 sm:pl-6 sm:pr-6"
                                 onClick={(e) => e.stopPropagation()}
                               >
+                                <button
+                                  type="button"
+                                  title="Raise clarification"
+                                  aria-label={`Raise clarification for ${row.name}`}
+                                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-cq-border bg-white text-cq-text-secondary transition-colors hover:bg-cq-bg hover:text-cq-text"
+                                  onClick={() =>
+                                    openRaiseModal({
+                                      bidId: clarificationBidId(clarificationSlug),
+                                      bidLabel: `Bid ${rowIndex + 1}`,
+                                      supplierIds: [row.id],
+                                      supplierNames: [row.name],
+                                      project: clarificationProjectLabel(clarificationSlug),
+                                    })
+                                  }
+                                >
+                                  <HelpCircle className="h-4 w-4" />
+                                </button>
                                 <Link
                                   href={`${basePath}/${row.id}`}
-                                  className="font-bold text-cq-link hover:underline inline-block"
+                                  className="font-bold text-cq-link hover:underline inline-block whitespace-nowrap"
                                 >
                                   View
                                 </Link>
