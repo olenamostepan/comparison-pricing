@@ -5,32 +5,19 @@ import { useSupplierQuestions } from '@/lib/supplier/questions/store'
 import type { SupplierQuestionFilter } from '@/lib/supplier/questions/types'
 import { SupplierQuestionsFilters } from '@/components/supplier/questions/SupplierQuestionsFilters'
 import { SupplierQuestionsTable } from '@/components/supplier/questions/SupplierQuestionsTable'
-import { SupplierAskQuestionModal } from '@/components/supplier/questions/SupplierAskQuestionModal'
 import { SupplierClarifyModal } from '@/components/supplier/questions/SupplierClarifyModal'
 import { ViewQuestionModal } from '@/components/supplier/questions/ViewQuestionModal'
 import type { SupplierQuestion } from '@/lib/supplier/questions/types'
 
-const btnAccentFilled =
-  'inline-flex shrink-0 items-center justify-center rounded-lg bg-cq-green px-4 py-2 text-sm font-bold text-white hover:bg-cq-green-hover'
-
-export function SupplierQuestionsTab({
-  projectId,
-  askOpen,
-  onAskOpenChange,
-}: {
-  projectId: string
-  askOpen: boolean
-  onAskOpenChange: (open: boolean) => void
-}) {
+export function SupplierAllQuestionsView() {
   const {
-    getQuestions,
-    askQuestion,
+    getAllQuestions,
     respondWithText,
     respondWithFiles,
     markNeedMoreInfo,
   } = useSupplierQuestions()
 
-  const allQuestions = getQuestions(projectId)
+  const allQuestions = getAllQuestions()
 
   const [filter, setFilter] = React.useState<SupplierQuestionFilter>('all')
   const [search, setSearch] = React.useState('')
@@ -48,10 +35,6 @@ export function SupplierQuestionsTab({
     [allQuestions],
   )
 
-  const needResponseCount = allQuestions.filter(
-    (q) => q.status === 'awaiting_you',
-  ).length
-
   const filtered = React.useMemo(() => {
     let rows = allQuestions
     if (filter === 'you_asked') {
@@ -61,24 +44,18 @@ export function SupplierQuestionsTab({
       rows = rows.filter((q) => q.direction === 'cquel_asked')
     }
     const q = search.trim().toLowerCase()
-    if (q) rows = rows.filter((r) => r.questionText.toLowerCase().includes(q))
+    if (q) {
+      rows = rows.filter(
+        (r) =>
+          r.questionText.toLowerCase().includes(q) ||
+          (r.projectName ?? '').toLowerCase().includes(q),
+      )
+    }
     return rows
   }, [allQuestions, filter, search])
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-lg font-extrabold text-cq-text">
-          Questions about this tender
-        </h2>
-        <p className="mt-1 text-sm text-cq-text-secondary">
-          {allQuestions.length} total
-          {needResponseCount > 0
-            ? ` · ${needResponseCount} need your response`
-            : ''}
-        </p>
-      </div>
-
       {allQuestions.length > 0 ? (
         <SupplierQuestionsFilters
           filter={filter}
@@ -91,16 +68,7 @@ export function SupplierQuestionsTab({
 
       {allQuestions.length === 0 ? (
         <div className="rounded-xl border border-cq-border bg-white px-8 py-12 text-center shadow-sm">
-          <p className="text-base font-bold text-cq-text">
-            No questions yet · Ask the first question about this tender
-          </p>
-          <button
-            type="button"
-            className={`${btnAccentFilled} mt-4`}
-            onClick={() => onAskOpenChange(true)}
-          >
-            Ask a question
-          </button>
+          <p className="text-base font-bold text-cq-text">No questions yet</p>
         </div>
       ) : filtered.length === 0 ? (
         <div className="rounded-xl border border-cq-border bg-white px-8 py-10 text-center shadow-sm">
@@ -119,16 +87,11 @@ export function SupplierQuestionsTab({
       ) : (
         <SupplierQuestionsTable
           rows={filtered}
+          showProjectUnderQuestion
           onRespond={setClarifyTarget}
           onView={setViewTarget}
         />
       )}
-
-      <SupplierAskQuestionModal
-        open={askOpen}
-        onOpenChange={onAskOpenChange}
-        onSubmit={(text) => askQuestion(projectId, text)}
-      />
 
       <SupplierClarifyModal
         open={clarifyTarget != null}

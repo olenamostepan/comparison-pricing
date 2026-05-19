@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { ImpactReviewCard } from '@/components/clarifications/ImpactReviewCard'
 import { ClarificationReviewHeader } from '@/components/clarifications/ClarificationReviewHeader'
+import { QuestionPromptSection } from '@/components/clarifications/QuestionPromptSection'
 import { AttachmentsAccordion } from '@/components/clarifications/AttachmentsAccordion'
 import {
   getDispatchSiblingNav,
@@ -53,19 +54,7 @@ export default function ClarificationReviewPage() {
           total={dispatchNav.total}
         />
 
-        <section className="rounded-xl border border-[rgba(28,117,188,0.15)] bg-[rgba(28,117,188,0.055)] px-5 py-4 sm:p-6">
-          <h2 className="text-xs font-bold uppercase tracking-wide text-cq-text-secondary">
-            Question
-          </h2>
-          <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-cq-text">
-            {item.question}
-          </p>
-          {item.linkedField ? (
-            <p className="mt-3 text-xs text-cq-text-secondary">
-              Linked field: <span className="font-semibold text-cq-text">{item.linkedField}</span>
-            </p>
-          ) : null}
-        </section>
+        <QuestionPromptSection question={item.question} linkedField={item.linkedField} />
 
         {item.reply ? (
           <section className="rounded-xl border border-cq-border bg-white p-5 sm:p-6">

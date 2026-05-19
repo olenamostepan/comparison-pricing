@@ -16,6 +16,11 @@ function answerAttachments(
   return []
 }
 
+function answeredByPrefix(answeredBy: string): string {
+  const first = answeredBy.split(' ')[0] ?? answeredBy
+  return first
+}
+
 function AnswerAttachments({
   attachments,
 }: {
@@ -49,13 +54,17 @@ function AnsweredByLine({ answer }: { answer: SupplierQuestionAnswer }) {
 
   return (
     <>
-      <p>
-        <span className="font-semibold">{answer.answeredBy.split(' ')[0]}:</span>{' '}
+      <p className="whitespace-pre-wrap">
+        <span className="font-semibold">{answeredByPrefix(answer.answeredBy)}:</span>{' '}
         {answer.text}
       </p>
       <AnswerAttachments attachments={attachments} />
     </>
   )
+}
+
+function hasAnswerText(answer?: SupplierQuestionAnswer): answer is SupplierQuestionAnswer {
+  return Boolean(answer?.text?.trim())
 }
 
 export function AnswerStatusCell({ question }: { question: SupplierQuestion }) {
@@ -69,12 +78,15 @@ export function AnswerStatusCell({ question }: { question: SupplierQuestion }) {
     )
   }
 
-  if (status === 'cquel_answered' && answer) {
-    return (
-      <StatusRow dotClass="bg-emerald-500">
-        <AnsweredByLine answer={answer} />
-      </StatusRow>
-    )
+  if (status === 'cquel_answered') {
+    if (hasAnswerText(answer)) {
+      return (
+        <StatusRow dotClass="bg-emerald-500">
+          <AnsweredByLine answer={answer} />
+        </StatusRow>
+      )
+    }
+    return <span className="text-sm text-cq-text-secondary">—</span>
   }
 
   if (status === 'awaiting_you') {
@@ -86,6 +98,13 @@ export function AnswerStatusCell({ question }: { question: SupplierQuestion }) {
   }
 
   if (status === 'you_answered') {
+    if (hasAnswerText(answer)) {
+      return (
+        <StatusRow dotClass="bg-emerald-500">
+          <AnsweredByLine answer={answer} />
+        </StatusRow>
+      )
+    }
     return (
       <StatusRow dotClass="bg-emerald-500">
         Sent · awaiting CQuel review
@@ -102,6 +121,16 @@ export function AnswerStatusCell({ question }: { question: SupplierQuestion }) {
   }
 
   if (status === 'resolved') {
+    if (hasAnswerText(answer)) {
+      return (
+        <div className="flex items-start gap-2 text-sm text-cq-text">
+          <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden />
+          <div className="min-w-0 flex-1 leading-relaxed">
+            <AnsweredByLine answer={answer} />
+          </div>
+        </div>
+      )
+    }
     return (
       <div className="flex items-start gap-2 text-sm text-cq-text">
         <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden />
@@ -110,7 +139,7 @@ export function AnswerStatusCell({ question }: { question: SupplierQuestion }) {
     )
   }
 
-  if (answer && direction === 'you_asked') {
+  if (hasAnswerText(answer) && direction === 'you_asked') {
     return (
       <StatusRow dotClass="bg-emerald-500">
         <AnsweredByLine answer={answer} />

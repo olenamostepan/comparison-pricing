@@ -48,11 +48,6 @@ export function ViewQuestionModal({
           <div className="mt-2">
             <AnswerStatusCell question={question} />
           </div>
-          {question.answer?.text ? (
-            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-cq-text">
-              {question.answer.text}
-            </p>
-          ) : null}
         </div>
 
         <div className="flex justify-end">

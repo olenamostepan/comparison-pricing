@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
 
 const OPS_HREF = '/clarifications'
 const SUPPLIER_FOCUS_HREF = '/supplier'
-const SUPPLIER_CLARIFICATIONS_HREF = '/supplier/clarifications'
+const SUPPLIER_QUESTIONS_HREF = '/supplier/questions'
 
 function routeActive(pathname: string, href: string): boolean {
   if (href === SUPPLIER_FOCUS_HREF) {
@@ -71,13 +71,13 @@ export function ClarificationWorkflowSwitcher({
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className={itemCls}>
-          <Link href={SUPPLIER_CLARIFICATIONS_HREF}>
-            {routeActive(pathname, SUPPLIER_CLARIFICATIONS_HREF) ? (
+          <Link href={SUPPLIER_QUESTIONS_HREF}>
+            {routeActive(pathname, '/supplier/projects') ? (
               <Check className="h-4 w-4 text-[var(--cq-green)]" aria-hidden />
             ) : (
               <span className="w-4 shrink-0" aria-hidden />
             )}
-            Supplier · Clarifications
+            Supplier · Questions
           </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>

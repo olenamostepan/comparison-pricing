@@ -4,7 +4,12 @@ import { Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { QuestionFilter } from '@/lib/questions/types'
 
-type Counts = { all: number; ai: number; supplier: number }
+type Counts = {
+  all: number
+  ai: number
+  to_suppliers: number
+  from_suppliers: number
+}
 
 export function QuestionsFilters({
   filter,
@@ -21,8 +26,9 @@ export function QuestionsFilters({
 }) {
   const chips: { id: QuestionFilter; label: string; count: number }[] = [
     { id: 'all', label: 'All', count: counts.all },
-    { id: 'ai', label: 'AI', count: counts.ai },
-    { id: 'supplier', label: 'Supplier', count: counts.supplier },
+    { id: 'ai', label: 'CQuel Agent', count: counts.ai },
+    { id: 'to_suppliers', label: 'To suppliers', count: counts.to_suppliers },
+    { id: 'from_suppliers', label: 'From suppliers', count: counts.from_suppliers },
   ]
 
   return (

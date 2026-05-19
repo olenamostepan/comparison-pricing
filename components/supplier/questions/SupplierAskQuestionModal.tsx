@@ -22,22 +22,37 @@ const SUGGESTIONS = [
   'Is the brief final?',
 ]
 
+export type AskQuestionProjectOption = { id: string; name: string }
+
 export function SupplierAskQuestionModal({
   open,
   onOpenChange,
   onSubmit,
+  projects,
+  projectId,
+  onProjectIdChange,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: (text: string) => void
+  /** When set, show a tender picker (cross-project ask). */
+  projects?: AskQuestionProjectOption[]
+  projectId?: string
+  onProjectIdChange?: (projectId: string) => void
 }) {
   const [question, setQuestion] = React.useState('')
+
+  const showProjectPicker = Boolean(projects && projects.length > 0)
+  const selectedProjectId =
+    projectId ?? projects?.[0]?.id ?? ''
 
   React.useEffect(() => {
     if (!open) setQuestion('')
   }, [open])
 
-  const canSend = question.trim().length > 0
+  const canSend =
+    question.trim().length > 0 &&
+    (!showProjectPicker || selectedProjectId.length > 0)
 
   function handleSend() {
     if (!canSend) return
@@ -59,6 +74,29 @@ export function SupplierAskQuestionModal({
             Your question will be sent to the CQuel team handling this tender.
           </p>
         </DialogHeader>
+
+        {showProjectPicker ? (
+          <div className="space-y-1.5">
+            <label
+              htmlFor="ask-question-project"
+              className="text-sm font-bold text-cq-text"
+            >
+              Which tender is this about?
+            </label>
+            <select
+              id="ask-question-project"
+              value={selectedProjectId}
+              onChange={(e) => onProjectIdChange?.(e.target.value)}
+              className="w-full rounded-lg border border-cq-border bg-white px-3 py-2 text-sm text-cq-text focus:border-cq-green focus:outline-none focus:ring-1 focus:ring-cq-green"
+            >
+              {projects!.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
 
         <Textarea
           value={question}

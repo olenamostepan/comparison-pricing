@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { toast } from 'sonner'
 import {
-  buildInitialSupplierQuestions,
-  DEMO_PROJECT_ID,
+  buildAllSupplierQuestions,
+  getSupplierProjectName,
 } from './mock-data'
 import { sortSupplierQuestions } from './sort'
 import type { SupplierQuestion } from './types'
@@ -25,6 +25,7 @@ function newQuestionId(): string {
 
 type SupplierQuestionsContextValue = {
   getQuestions: (projectId: string) => SupplierQuestion[]
+  getAllQuestions: () => SupplierQuestion[]
   askQuestion: (projectId: string, text: string) => void
   respondWithText: (questionId: string, text: string) => void
   respondWithFiles: (questionId: string, files: File[], message?: string) => void
@@ -41,12 +42,17 @@ export function SupplierQuestionsProvider({
   children: React.ReactNode
 }) {
   const [questions, setQuestions] = React.useState<SupplierQuestion[]>(() =>
-    buildInitialSupplierQuestions(DEMO_PROJECT_ID),
+    buildAllSupplierQuestions(),
   )
 
   const getQuestions = React.useCallback(
     (projectId: string) =>
       sortSupplierQuestions(questions.filter((q) => q.projectId === projectId)),
+    [questions],
+  )
+
+  const getAllQuestions = React.useCallback(
+    () => sortSupplierQuestions(questions),
     [questions],
   )
 
@@ -57,6 +63,7 @@ export function SupplierQuestionsProvider({
     const row: SupplierQuestion = {
       id: newQuestionId(),
       projectId,
+      projectName: getSupplierProjectName(projectId),
       questionText: trimmed,
       direction: 'you_asked',
       status: 'awaiting_cquel',
@@ -150,6 +157,7 @@ export function SupplierQuestionsProvider({
   const value = React.useMemo(
     () => ({
       getQuestions,
+      getAllQuestions,
       askQuestion,
       respondWithText,
       respondWithFiles,
@@ -157,6 +165,7 @@ export function SupplierQuestionsProvider({
     }),
     [
       getQuestions,
+      getAllQuestions,
       askQuestion,
       respondWithText,
       respondWithFiles,

@@ -1,23 +1,28 @@
 'use client'
 
+import Link from 'next/link'
 import type { SupplierQuestion } from '@/lib/supplier/questions/types'
+import { getSupplierProjectName } from '@/lib/supplier/questions/mock-data'
 import { AnswerStatusCell } from '@/components/supplier/questions/AnswerStatusCell'
 import { QuestionDirectionBadge } from '@/components/supplier/questions/QuestionDirectionBadge'
 import { cn } from '@/lib/utils'
 
 const btnOutline =
   'rounded-lg border border-cq-border bg-white px-3 py-1.5 text-sm font-bold text-cq-text hover:bg-cq-bg'
-const btnGreenFilled =
-  'rounded-lg bg-[var(--cq-green)] px-3 py-1.5 text-sm font-bold text-white hover:bg-[var(--cq-green-hover)]'
+const btnDarkFilled =
+  'rounded-lg bg-cq-text px-3 py-1.5 text-sm font-bold text-white hover:opacity-90'
 
 export function SupplierQuestionsTable({
   rows,
   onRespond,
   onView,
+  showProjectUnderQuestion = false,
 }: {
   rows: SupplierQuestion[]
   onRespond: (question: SupplierQuestion) => void
   onView: (question: SupplierQuestion) => void
+  /** Cross-project lists: show tender name under question meta */
+  showProjectUnderQuestion?: boolean
 }) {
   return (
     <div className="overflow-hidden rounded-xl border border-cq-border bg-white shadow-sm">
@@ -34,6 +39,9 @@ export function SupplierQuestionsTable({
             {rows.map((row) => {
               const showRespond =
                 row.direction === 'cquel_asked' && row.status === 'awaiting_you'
+              const projectLabel =
+                row.projectName ?? getSupplierProjectName(row.projectId)
+              const showProject = showProjectUnderQuestion
 
               return (
                 <tr key={row.id} className="transition-colors hover:bg-cq-bg/60">
@@ -45,6 +53,16 @@ export function SupplierQuestionsTable({
                         {row.ageLabel}
                       </span>
                     </div>
+                    {showProject ? (
+                      <p className="mt-1.5">
+                        <Link
+                          href={`/supplier/projects/${row.projectId}?tab=questions`}
+                          className="text-xs text-cq-text-secondary hover:text-cq-link hover:underline"
+                        >
+                          {projectLabel}
+                        </Link>
+                      </p>
+                    ) : null}
                   </td>
                   <td className="px-4 py-4 align-top">
                     <AnswerStatusCell question={row} />
@@ -53,7 +71,7 @@ export function SupplierQuestionsTable({
                     {showRespond ? (
                       <button
                         type="button"
-                        className={btnGreenFilled}
+                        className={btnDarkFilled}
                         onClick={() => onRespond(row)}
                       >
                         Respond

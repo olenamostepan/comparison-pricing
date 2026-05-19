@@ -48,6 +48,7 @@ export default function SupplierProjectPage() {
 
   const [screenTab, setScreenTab] = React.useState<ProjectTab>('project-info')
   const [mounted, setMounted] = React.useState(false)
+  const [askOpen, setAskOpen] = React.useState(false)
 
   React.useEffect(() => {
     setMounted(true)
@@ -56,6 +57,10 @@ export default function SupplierProjectPage() {
   React.useEffect(() => {
     setScreenTab(tabFromQuery(searchParams.get('tab')))
   }, [searchParams])
+
+  React.useEffect(() => {
+    if (screenTab !== 'questions') setAskOpen(false)
+  }, [screenTab])
 
   const setScreenTabWithUrl = React.useCallback(
     (tab: ProjectTab) => {
@@ -110,32 +115,43 @@ export default function SupplierProjectPage() {
             value={screenTab}
             onValueChange={(v) => setScreenTabWithUrl(v as ProjectTab)}
           >
-            <Tabs.List className="flex flex-wrap gap-6 border-b border-cq-border sm:gap-8">
-              <Tabs.Trigger
-                value="project-info"
-                className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
-              >
-                Project Info
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                value="supporting-docs"
-                className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
-              >
-                Supporting Documents
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                value="bid-overview"
-                className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
-              >
-                Bid Overview
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                value="questions"
-                className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
-              >
-                Questions ({questionCount})
-              </Tabs.Trigger>
-            </Tabs.List>
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-cq-border">
+              <Tabs.List className="flex flex-wrap gap-6 sm:gap-8">
+                <Tabs.Trigger
+                  value="project-info"
+                  className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
+                >
+                  Project Info
+                </Tabs.Trigger>
+                <Tabs.Trigger
+                  value="supporting-docs"
+                  className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
+                >
+                  Supporting Documents
+                </Tabs.Trigger>
+                <Tabs.Trigger
+                  value="bid-overview"
+                  className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
+                >
+                  Bid Overview
+                </Tabs.Trigger>
+                <Tabs.Trigger
+                  value="questions"
+                  className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
+                >
+                  Questions ({questionCount})
+                </Tabs.Trigger>
+              </Tabs.List>
+              {screenTab === 'questions' && (
+                <button
+                  type="button"
+                  onClick={() => setAskOpen(true)}
+                  className="mb-1 inline-flex shrink-0 items-center justify-center rounded-lg bg-cq-green px-4 py-2 text-sm font-bold text-white hover:bg-cq-green-hover sm:mb-0"
+                >
+                  Ask a question
+                </button>
+              )}
+            </div>
           </Tabs.Root>
         ) : (
           <div className="flex flex-wrap gap-6 border-b border-cq-border sm:gap-8">
@@ -156,7 +172,11 @@ export default function SupplierProjectPage() {
 
         <div className={cn(screenTab !== 'questions' && 'rounded-xl border border-cq-border bg-white p-6 shadow-sm')}>
           {screenTab === 'questions' && mounted ? (
-            <SupplierQuestionsTab projectId={projectId} />
+            <SupplierQuestionsTab
+              projectId={projectId}
+              askOpen={askOpen}
+              onAskOpenChange={setAskOpen}
+            />
           ) : screenTab === 'supporting-docs' ? (
             <PlaceholderPanel title="Supporting Documents">
               Tender brief, site photos, and landlord constraints — prototype placeholder.

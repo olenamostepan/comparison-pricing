@@ -139,7 +139,7 @@ export function AskQuestionModal({
           </div>
           {destination === 'ai' ? (
             <p className="text-sm text-cq-text-secondary">
-              AI reads all available bids — no need to select suppliers.
+              CQuel Agent reads all available bids — no need to select suppliers.
             </p>
           ) : (
             <ul className="max-h-40 space-y-2 overflow-y-auto rounded-lg border border-cq-border p-3">
@@ -178,10 +178,10 @@ export function AskQuestionModal({
             >
               <span className="flex items-center gap-1.5 text-sm font-bold text-cq-text">
                 <Sparkles className="h-4 w-4 text-cq-green" />
-                Ask AI
+                Ask CQuel Agent
               </span>
               <span className="mt-1 block text-xs text-cq-text-secondary">
-                AI will read the supplier bids and try to answer.
+                CQuel Agent will read the supplier bids and try to answer.
               </span>
             </button>
             <button
@@ -218,7 +218,7 @@ export function AskQuestionModal({
             onClick={onSend}
             className="rounded-lg bg-cq-green px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-cq-green-hover disabled:opacity-50"
           >
-            {destination === 'ai' ? 'Send to AI' : 'Send to suppliers'}
+            {destination === 'ai' ? 'Send to CQuel Agent' : 'Send to suppliers'}
           </button>
         </DialogFooter>
       </DialogContent>

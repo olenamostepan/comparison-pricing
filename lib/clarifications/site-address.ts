@@ -11,3 +11,7 @@ const SITE_BY_PROJECT: Record<string, string> = {
 export function clarificationSiteAddress(c: Clarification): string {
   return SITE_BY_PROJECT[c.project] ?? c.project
 }
+
+export function siteAddressForProjectLabel(projectLabel: string): string {
+  return SITE_BY_PROJECT[projectLabel] ?? projectLabel
+}

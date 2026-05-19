@@ -30,6 +30,8 @@ export type SupplierQuestionBidContext = {
 export type SupplierQuestion = {
   id: string
   projectId: string
+  /** Tender / project display name for cross-project lists */
+  projectName?: string
   questionText: string
   direction: QuestionDirection
   status: SupplierQuestionStatus
