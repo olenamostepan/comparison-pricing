@@ -73,14 +73,14 @@ export function BidDetailsModal({ supplier, open, onOpenChange, companyProfile }
               href={`/supplier-comparison/${supplier.id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-10 flex-1 min-w-[120px] px-4 justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63] font-bold no-underline"
+              className="flex h-10 flex-1 min-w-[120px] px-4 justify-center items-center gap-2 rounded-lg bg-[var(--cq-green)] text-white hover:bg-[var(--cq-green-hover)] font-bold no-underline"
               style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', lineHeight: 'normal' }}
             >
               <Building2 className="w-4 h-4" />
               Supplier profile
             </a>
             <button
-              className="flex h-10 flex-1 min-w-[120px] px-4 justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63]"
+              className="flex h-10 flex-1 min-w-[120px] px-4 justify-center items-center gap-2 rounded-lg bg-[var(--cq-green)] text-white hover:bg-[var(--cq-green-hover)]"
               style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
             >
               Contact supplier
@@ -101,7 +101,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange, companyProfile }
             onClick={() => setActiveTab("proposal")}
             className={`pb-3 px-1 font-semibold text-sm relative ${
               activeTab === "proposal" 
-                ? "text-[#1E2832] border-b-2 border-[#29B273]" 
+                ? "text-[#1E2832] border-b-2 border-[var(--cq-green)]" 
                 : "text-[#4D5761]"
             }`}
           >
@@ -117,7 +117,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange, companyProfile }
             }}
             className={`pb-3 px-1 ml-6 font-semibold text-sm relative ${
               activeTab === "about" 
-                ? "text-[#1E2832] border-b-2 border-[#29B273]" 
+                ? "text-[#1E2832] border-b-2 border-[var(--cq-green)]" 
                 : "text-[#4D5761]"
             }`}
           >
@@ -148,7 +148,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange, companyProfile }
                   <div className="pt-3 pb-4 space-y-6">
                     {/* Relevance Score - Prominent Card */}
                     {supplier.supplierRelevance?.generalScore && (
-                      <div className="rounded-lg border-2 border-[#29B273] bg-gradient-to-br from-[#E8F5E9] to-[#C8E6C9] p-4">
+                      <div className="rounded-lg border-2 border-[var(--cq-green)] bg-gradient-to-br from-[#FDF0EB] to-[#FAD9CC] p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
@@ -159,7 +159,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange, companyProfile }
                                 <button
                                   onMouseEnter={() => setShowRelevanceTooltip(true)}
                                   onMouseLeave={() => setShowRelevanceTooltip(false)}
-                                  className="text-[#29B273] hover:text-[#2E7D32] transition-colors"
+                                  className="text-[var(--cq-green)] hover:text-[var(--cq-green-hover)] transition-colors"
                                 >
                                   <Info size={14} />
                                 </button>
@@ -204,7 +204,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange, companyProfile }
                               Overall relevance to this project
                             </div>
                           </div>
-                          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-[#29B273] text-white ml-4">
+                          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-[var(--cq-green)] text-white ml-4">
                             <span className="text-2xl font-extrabold">{supplier.supplierRelevance.generalScore}</span>
                           </div>
                         </div>
@@ -303,7 +303,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange, companyProfile }
                         <div className="p-4">
                           <h4 className="font-bold text-base text-[#1E2832] mb-1">Skyscraper of London</h4>
                           <p className="text-sm text-[#4D5761] mb-2">Made on 23.02.2024</p>
-                          <p className="text-xl font-bold text-[#29B273]">£300,000</p>
+                          <p className="text-xl font-bold text-[var(--cq-green)]">£300,000</p>
                         </div>
                       </div>
 
@@ -319,7 +319,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange, companyProfile }
                         <div className="p-4">
                           <h4 className="font-bold text-base text-[#1E2832] mb-1">Students Housing in Leeds</h4>
                           <p className="text-sm text-[#4D5761] mb-2">Made on 12.12.2024</p>
-                          <p className="text-xl font-bold text-[#29B273]">£279,000</p>
+                          <p className="text-xl font-bold text-[var(--cq-green)]">£279,000</p>
                         </div>
                       </div>
                     </div>

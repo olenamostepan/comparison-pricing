@@ -1,4 +1,5 @@
 import type { Clarification, Section, Status } from './types'
+import { DEMO_SUPPLIER_ID, DEMO_SUPPLIER_NAME } from './mock-data'
 
 export type Perspective = 'ops' | 'supplier'
 
@@ -18,7 +19,6 @@ export function courtFromPerspective(
         return 'their'
       case 'review':
       case 'need_response':
-      case 'batch_review':
         return 'your'
       default:
         return null
@@ -27,8 +27,6 @@ export function courtFromPerspective(
 
   switch (c.status) {
     case 'awaiting':
-      return 'your'
-    case 'batch_review':
       return 'your'
     case 'review':
     case 'need_response':
@@ -56,8 +54,6 @@ export function statusLabelFromPerspective(
         return 'review'
       case 'need_response':
         return 'need to respond'
-      case 'batch_review':
-        return 'batch review'
       case 'applied':
         return 'accepted'
       case 'closed':
@@ -71,8 +67,6 @@ export function statusLabelFromPerspective(
       return 'answered'
     case 'need_response':
       return 'Need more info'
-    case 'batch_review':
-      return 'awaiting'
     case 'applied':
       return 'accepted'
     case 'closed':
@@ -95,6 +89,12 @@ export function isVisibleToDemoSupplier(
   supplierId: string,
 ): boolean {
   if (c.supplierId === supplierId) return true
-  if (c.supplier === 'Multiple suppliers') return false
+  if (
+    supplierId === DEMO_SUPPLIER_ID &&
+    c.supplierId == null &&
+    c.supplier === DEMO_SUPPLIER_NAME
+  ) {
+    return true
+  }
   return false
 }

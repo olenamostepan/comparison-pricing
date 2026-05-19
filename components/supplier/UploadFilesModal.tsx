@@ -89,7 +89,7 @@ export function UploadFilesModal({
             }}
             className={
               dragOver
-                ? 'flex h-[200px] w-full flex-col items-center justify-center rounded-xl border-2 border-[var(--cq-green)] bg-[rgba(41,178,115,0.08)] transition-colors'
+                ? 'flex h-[200px] w-full flex-col items-center justify-center rounded-xl border-2 border-[var(--cq-green)] bg-[var(--cq-accent-muted)] transition-colors'
                 : 'flex h-[200px] w-full flex-col items-center justify-center rounded-xl border border-dashed border-cq-border bg-cq-bg transition-colors'
             }
           >

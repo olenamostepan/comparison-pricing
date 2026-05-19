@@ -20,7 +20,7 @@ import { useClarifications } from '@/lib/clarifications/store'
 import { Label } from '@/components/ui/label'
 function linkedContextChip(prefill: RaiseModalPrefill | null): string {
   if (!prefill) {
-    return `— · Multiple suppliers · ${DEFAULT_CLARIFICATION_PROJECT}`
+    return `— · Select suppliers · ${DEFAULT_CLARIFICATION_PROJECT}`
   }
   const core = `${prefill.bidLabel} · ${prefill.supplierNames[0] ?? 'Supplier'} · ${prefill.project}`
   if (prefill.linkedField) {

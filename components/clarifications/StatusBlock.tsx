@@ -21,20 +21,6 @@ export function StatusBlock({
 
   if (item.overdue && (item.status === 'awaiting' || item.status === 'review')) {
     subLine = 'overdue'
-  } else if (
-    item.rollup?.awaitingRemainder &&
-    section === 'in_progress'
-  ) {
-    const { repliedCount, totalCount } = item.rollup
-    subLine = `${Math.max(totalCount - repliedCount, 0)} still awaiting`
-  } else if (
-    section === 'in_progress' &&
-    item.rollup &&
-    !item.rollup.awaitingRemainder
-  ) {
-    subLine = `${item.rollup.repliedCount} replies received`
-  } else if (item.status === 'batch_review' && item.rollup) {
-    subLine = `${item.rollup.repliedCount} replies received`
   }
 
   return (

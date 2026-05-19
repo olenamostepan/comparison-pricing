@@ -303,7 +303,7 @@ export function TenderComparisonPage({ config }: TenderComparisonPageProps) {
       {selectedSupplier && (
         <a
           href={`/supplier-comparison/${selectedSupplier.id}`}
-          className="fixed bottom-24 right-8 z-50 flex h-12 px-5 items-center gap-2 rounded-full bg-[#29B273] text-white font-bold shadow-xl hover:bg-[#239f63] no-underline"
+          className="fixed bottom-24 right-8 z-50 flex h-12 px-5 items-center gap-2 rounded-full bg-[var(--cq-green)] text-white font-bold shadow-xl hover:bg-[var(--cq-green-hover)] no-underline"
         >
           Supplier profile
         </a>

@@ -175,7 +175,7 @@ export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            className="flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63] whitespace-nowrap"
+            className="flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[var(--cq-green)] text-white hover:bg-[var(--cq-green-hover)] whitespace-nowrap"
             style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
             onClick={() => {/* placeholder for contact action */}}
           >

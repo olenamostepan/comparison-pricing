@@ -4,10 +4,12 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* CQuel brand & UI (existing project palette) */
-  --cq-green: #29b273;
-  --cq-green-hover: #239f63;
-  --cq-dark: #126e53;
+  /* CQuel brand & UI */
+  --cq-green: #e9571f;
+  --cq-green-hover: #d14e18;
+  --cq-dark: #b8431a;
+  --cq-accent-muted: rgba(233, 87, 31, 0.09);
+  --cq-accent-muted-strong: rgba(233, 87, 31, 0.12);
   --cq-text: #1e2832;
   --cq-text-secondary: #4d5761;
   --cq-link: #1c75bc;
@@ -91,7 +93,7 @@
 }
 
 @theme inline {
-  --font-sans: 'Wix Madefor Display', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
   --color-cq-green: var(--cq-green);
   --color-cq-green-hover: var(--cq-green-hover);

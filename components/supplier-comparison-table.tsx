@@ -99,7 +99,7 @@ const STATUS_CHART_COLORS = [
   '#94A3B8', // slate — didn't respond
   '#F59E0B', // amber — missed deadline
   '#64748B', // grey — excluded
-  '#29B273', // green — submitted
+  '#E9571F', // accent — submitted
   '#CBD5E1', // fallback
 ]
 
@@ -279,7 +279,7 @@ const VIEW_COL_WIDTH = '7.5rem'
 const NOTE_COL_WIDTH = 'minmax(16rem, min(36rem, min(55vw, 90ch)))'
 const SUPPLIER_TABLE_GRID_TEMPLATE = `3rem minmax(0, min(260px, 36vw)) repeat(3, ${NUMERIC_COL_WIDTH}) ${QUALITY_COL_WIDTH} ${NOTE_COL_WIDTH} ${VIEW_COL_WIDTH}`
 
-const BREAKDOWN_PIE_COLORS = ['#126e53', '#29b273', '#239f63', '#1c75bc', '#4d5761', '#9ca3af']
+const BREAKDOWN_PIE_COLORS = ['#b8431a', '#e9571f', '#d14e18', '#1c75bc', '#4d5761', '#9ca3af']
 
 // ─── Sub-components ────────────────────────────────────────────────────
 

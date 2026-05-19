@@ -15,7 +15,7 @@ export function CourtBadge({
         className={cn(
           'inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-xs font-bold',
           label === 'Your Court'
-            ? 'border border-[var(--cq-green)]/35 bg-[rgba(41,178,115,0.09)] text-cq-text'
+            ? 'border border-[var(--cq-green)]/35 bg-[var(--cq-accent-muted)] text-cq-text'
             : 'border border-cq-border bg-cq-bg text-cq-text-secondary',
         )}
       >

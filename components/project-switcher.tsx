@@ -26,6 +26,9 @@ export function ProjectSwitcher() {
     !pathname.startsWith('/supplier-comparison/led-rostock')
   const isLedRostock = pathname.startsWith('/supplier-comparison/led-rostock')
   const isClarifications = pathname.startsWith('/clarifications')
+  const isSupplierClarifications = pathname.startsWith('/supplier/clarifications')
+  const isSupplierPortal =
+    pathname.startsWith('/supplier') && !isSupplierClarifications
 
   return (
     <div className="border-b border-cq-border bg-white">
@@ -78,21 +81,41 @@ export function ProjectSwitcher() {
               LED (Rostock)
             </Link>
           </div>
-          {!isHome ? (
-            <div className="inline-flex rounded-lg border border-cq-border bg-cq-bg p-1">
-              <Link
-                href="/clarifications"
-                className={cn(
-                  'rounded-md px-4 py-2 text-sm font-semibold transition-colors',
-                  isClarifications
-                    ? 'border border-cq-border bg-white text-cq-text shadow-sm'
-                    : 'text-cq-text-secondary hover:text-cq-text',
-                )}
-              >
-                Clarifications
-              </Link>
-            </div>
-          ) : null}
+          <div className="inline-flex flex-wrap rounded-lg border border-cq-border bg-cq-bg p-1">
+            <Link
+              href="/clarifications"
+              className={cn(
+                'rounded-md px-4 py-2 text-sm font-semibold transition-colors',
+                isClarifications
+                  ? 'border border-cq-border bg-white text-cq-text shadow-sm'
+                  : 'text-cq-text-secondary hover:text-cq-text',
+              )}
+            >
+              Clarifications (ops)
+            </Link>
+            <Link
+              href="/supplier/clarifications"
+              className={cn(
+                'rounded-md px-4 py-2 text-sm font-semibold transition-colors',
+                isSupplierClarifications
+                  ? 'border border-cq-border bg-white text-cq-text shadow-sm'
+                  : 'text-cq-text-secondary hover:text-cq-text',
+              )}
+            >
+              Supplier clarifications
+            </Link>
+            <Link
+              href="/supplier"
+              className={cn(
+                'rounded-md px-4 py-2 text-sm font-semibold transition-colors',
+                isSupplierPortal
+                  ? 'border border-cq-border bg-white text-cq-text shadow-sm'
+                  : 'text-cq-text-secondary hover:text-cq-text',
+              )}
+            >
+              Supplier home
+            </Link>
+          </div>
         </div>
       </div>
     </div>

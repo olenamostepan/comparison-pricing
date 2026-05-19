@@ -247,7 +247,7 @@ export function OMApproachDisplay({ text, structuredData }: OMApproachDisplayPro
     <div className="w-full space-y-6">
       {/* Summary Section */}
       {data.summary && (
-        <div className="bg-gradient-to-r from-[#29b273]/10 to-[#29b273]/5 rounded-lg p-5 border border-[#29b273]/20">
+        <div className="bg-gradient-to-r from-[var(--cq-green)]/10 to-[var(--cq-green)]/5 rounded-lg p-5 border border-[var(--cq-green)]/20">
           <h3 className="text-lg font-bold text-[#1E2832] mb-2">
             {data.summary.title}
           </h3>
@@ -261,13 +261,13 @@ export function OMApproachDisplay({ text, structuredData }: OMApproachDisplayPro
       {data.whatsIncluded && data.whatsIncluded.length > 0 && (
         <div>
           <h3 className="text-base font-bold text-[#1E2832] mb-3 flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-[#29b273]" />
+            <CheckCircle2 className="w-5 h-5 text-[var(--cq-green)]" />
             What's Included
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {data.whatsIncluded.map((item, index) => (
               <div key={index} className="flex items-start gap-2 bg-white border border-[#E5E7EB] rounded-lg p-3">
-                <Check className="w-4 h-4 text-[#29b273] flex-shrink-0 mt-0.5" />
+                <Check className="w-4 h-4 text-[var(--cq-green)] flex-shrink-0 mt-0.5" />
                 <span className="text-sm text-[#4D5761]">{item}</span>
               </div>
             ))}
@@ -294,7 +294,7 @@ export function OMApproachDisplay({ text, structuredData }: OMApproachDisplayPro
                 <ul className="space-y-1">
                   {feature.items.map((item, itemIndex) => (
                     <li key={itemIndex} className="text-xs text-[#4D5761] flex items-start gap-1.5">
-                      <span className="text-[#29b273] mt-0.5">•</span>
+                      <span className="text-[var(--cq-green)] mt-0.5">•</span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -309,7 +309,7 @@ export function OMApproachDisplay({ text, structuredData }: OMApproachDisplayPro
       {data.monitoringProcess && data.monitoringProcess.length > 0 && (
         <div>
           <h3 className="text-base font-bold text-[#1E2832] mb-3 flex items-center gap-2">
-            <Monitor className="w-5 h-5 text-[#29b273]" />
+            <Monitor className="w-5 h-5 text-[var(--cq-green)]" />
             Monitoring Process
           </h3>
           <div className="space-y-3">
@@ -318,7 +318,7 @@ export function OMApproachDisplay({ text, structuredData }: OMApproachDisplayPro
                 key={index}
                 className="flex items-start gap-4 bg-white border border-[#E5E7EB] rounded-lg p-4"
               >
-                <div className="bg-[#29b273]/10 text-[#29b273] rounded-full px-3 py-1 text-xs font-semibold flex-shrink-0">
+                <div className="bg-[var(--cq-green)]/10 text-[var(--cq-green)] rounded-full px-3 py-1 text-xs font-semibold flex-shrink-0">
                   {process.phase}
                 </div>
                 <div className="flex-1">
@@ -340,7 +340,7 @@ export function OMApproachDisplay({ text, structuredData }: OMApproachDisplayPro
         <div>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-base font-bold text-[#1E2832] flex items-center gap-2">
-              <Wrench className="w-5 h-5 text-[#29b273]" />
+              <Wrench className="w-5 h-5 text-[var(--cq-green)]" />
               Issue Resolution Process
             </h3>
             {data.issueResolution.timeline && (
@@ -353,12 +353,12 @@ export function OMApproachDisplay({ text, structuredData }: OMApproachDisplayPro
           
           <div className="relative">
             {/* Timeline line */}
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-[#29b273]/20 hidden md:block" />
+            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-[var(--cq-green)]/20 hidden md:block" />
             
             <div className="space-y-4">
               {data.issueResolution.steps.map((step, index) => (
                 <div key={index} className="relative flex items-start gap-4">
-                  <div className="bg-[#29b273] text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 z-10 font-bold text-sm">
+                  <div className="bg-[var(--cq-green)] text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 z-10 font-bold text-sm">
                     {step.number}
                   </div>
                   <div className="flex-1 bg-white border border-[#E5E7EB] rounded-lg p-4">
@@ -368,7 +368,7 @@ export function OMApproachDisplay({ text, structuredData }: OMApproachDisplayPro
                           {step.action}
                         </h4>
                         <p className="text-xs text-[#4D5761]">
-                          Handled by: <span className="font-medium text-[#29b273]">{step.who}</span>
+                          Handled by: <span className="font-medium text-[var(--cq-green)]">{step.who}</span>
                         </p>
                       </div>
                       {step.customerAction && (
@@ -391,7 +391,7 @@ export function OMApproachDisplay({ text, structuredData }: OMApproachDisplayPro
         (data.responsibilities.customer?.length > 0 || data.responsibilities.supplier?.length > 0) && (
           <div>
             <h3 className="text-base font-bold text-[#1E2832] mb-3 flex items-center gap-2">
-              <Users className="w-5 h-5 text-[#29b273]" />
+              <Users className="w-5 h-5 text-[var(--cq-green)]" />
               Responsibilities
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -415,15 +415,15 @@ export function OMApproachDisplay({ text, structuredData }: OMApproachDisplayPro
 
               {/* Supplier Responsibilities */}
               {data.responsibilities.supplier && data.responsibilities.supplier.length > 0 && (
-                <div className="bg-[#29b273]/10 border border-[#29b273]/20 rounded-lg p-4">
+                <div className="bg-[var(--cq-green)]/10 border border-[var(--cq-green)]/20 rounded-lg p-4">
                   <h4 className="font-semibold text-[#1E2832] mb-3 text-sm flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-[#29b273]" />
+                    <Shield className="w-4 h-4 text-[var(--cq-green)]" />
                     Our Responsibility
                   </h4>
                   <ul className="space-y-2">
                     {data.responsibilities.supplier.map((item, index) => (
                       <li key={index} className="flex items-start gap-2 text-sm text-[#4D5761]">
-                        <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#29b273]" />
+                        <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5 text-[var(--cq-green)]" />
                         <span>{item}</span>
                       </li>
                     ))}

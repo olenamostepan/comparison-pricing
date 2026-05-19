@@ -89,8 +89,13 @@ export function ClarificationsProvider({
       raisedBy: string
     }) => {
       const title = deriveTitle(draft.question)
+      const dispatchId =
+        typeof crypto !== 'undefined' && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `disp-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
       const additions: Clarification[] = draft.recipients.map((r) => ({
         id: newClarificationId(),
+        dispatchId,
         title,
         question: draft.question.trim(),
         linkedField: draft.linkedField,

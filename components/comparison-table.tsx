@@ -381,7 +381,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
             onClick={() => setActiveFilter("relevance")}
             className={`px-4 py-2 rounded-lg text-[14px] font-bold transition-colors ${
               activeFilter === "relevance"
-                ? 'bg-white text-[#29b273] border border-[#29b273]'
+                ? 'bg-white text-[var(--cq-green)] border border-[var(--cq-green)]'
                 : 'bg-[#F9FAFB] text-[#1E2832] border border-[#D3D7DC]'
             }`}
           >
@@ -391,7 +391,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
             onClick={() => setActiveFilter("financial")}
             className={`px-4 py-2 rounded-lg text-[14px] font-bold transition-colors ${
               activeFilter === "financial"
-                ? 'bg-white text-[#29b273] border border-[#29b273]'
+                ? 'bg-white text-[var(--cq-green)] border border-[var(--cq-green)]'
                 : 'bg-[#F9FAFB] text-[#1E2832] border border-[#D3D7DC]'
             }`}
           >
@@ -401,7 +401,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
             onClick={() => setActiveFilter("speed")}
             className={`px-4 py-2 rounded-lg text-[14px] font-bold transition-colors ${
               activeFilter === "speed"
-                ? 'bg-white text-[#29b273] border border-[#29b273]'
+                ? 'bg-white text-[var(--cq-green)] border border-[var(--cq-green)]'
                 : 'bg-[#F9FAFB] text-[#1E2832] border border-[#D3D7DC]'
             }`}
           >
@@ -411,7 +411,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
             onClick={() => setActiveFilter("technical")}
             className={`px-4 py-2 rounded-lg text-[14px] font-bold transition-colors ${
               activeFilter === "technical"
-                ? 'bg-white text-[#29b273] border border-[#29b273]'
+                ? 'bg-white text-[var(--cq-green)] border border-[var(--cq-green)]'
                 : 'bg-[#F9FAFB] text-[#1E2832] border border-[#D3D7DC]'
             }`}
           >
@@ -655,7 +655,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                        <td key={`contact-${supplier.id}`} className="p-3 border-r border-gray-200 text-sm leading-tight"
                            style={{ minWidth: '180px', width: '180px', borderRight: index === orderedSuppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}>
                          <button
-                           className="w-full flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63]"
+                           className="w-full flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[var(--cq-green)] text-white hover:bg-[var(--cq-green-hover)]"
                            style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
                            onClick={() => {/* placeholder for contact action */}}
                          >

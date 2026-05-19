@@ -89,7 +89,7 @@ export function SupplierPortalChrome({
         </div>
         <SupplierNav pathname={pathname} />
       </header>
-      <main>{children}</main>
+      <main className="scroll-mt-20 pb-12">{children}</main>
     </div>
   )
 }

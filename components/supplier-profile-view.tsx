@@ -310,7 +310,7 @@ function KeyFlagIcon({ icon }: { icon: KeyFlag['icon'] }) {
   }
 }
 
-const CHART_COLORS = ['#126e53', '#29b273', '#239f63', '#1c75bc', '#4d5761', '#9ca3af']
+const CHART_COLORS = ['#b8431a', '#e9571f', '#d14e18', '#1c75bc', '#4d5761', '#9ca3af']
 
 function CategoryBreakdownChart({
   categories,

@@ -88,7 +88,7 @@ export default function HomePage() {
                     <p className="text-sm text-[#4D5761]">{project.description}</p>
                   </div>
                 </div>
-                <span className="flex h-10 px-4 items-center gap-2 rounded-lg bg-[#29B273] text-white font-bold text-sm group-hover:bg-[#239f63] transition-colors w-fit">
+                <span className="flex h-10 px-4 items-center gap-2 rounded-lg bg-[var(--cq-green)] text-white font-bold text-sm group-hover:bg-[var(--cq-green-hover)] transition-colors w-fit">
                   View Comparison
                 </span>
               </Link>
@@ -111,7 +111,7 @@ export default function HomePage() {
                   className="group rounded-2xl border border-[#E4E7EC] bg-white shadow-sm hover:shadow-lg transition-shadow p-6 flex flex-col gap-4"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-xl border border-[#E4E7EC] bg-[#F9FAFB] text-[#29B273]">
+                    <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-xl border border-[#E4E7EC] bg-[#F9FAFB] text-[var(--cq-green)]">
                       <Icon className="w-9 h-9" aria-hidden />
                     </div>
                     <div className="flex-1">
@@ -122,7 +122,7 @@ export default function HomePage() {
                       <p className="text-sm text-[#4D5761]">{w.description}</p>
                     </div>
                   </div>
-                  <span className="flex h-10 px-4 items-center gap-2 rounded-lg bg-[#29B273] text-white font-bold text-sm group-hover:bg-[#239f63] transition-colors w-fit">
+                  <span className="flex h-10 px-4 items-center gap-2 rounded-lg bg-[var(--cq-green)] text-white font-bold text-sm group-hover:bg-[var(--cq-green-hover)] transition-colors w-fit">
                     {w.cta}
                   </span>
                 </Link>

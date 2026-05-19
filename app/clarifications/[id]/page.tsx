@@ -3,7 +3,12 @@
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { ImpactReviewCard } from '@/components/clarifications/ImpactReviewCard'
+import { ClarificationReviewHeader } from '@/components/clarifications/ClarificationReviewHeader'
 import { AttachmentsAccordion } from '@/components/clarifications/AttachmentsAccordion'
+import {
+  getDispatchSiblingNav,
+  getDispatchSiblings,
+} from '@/lib/clarifications/dispatch'
 import { sectionFromPerspective } from '@/lib/clarifications/perspective'
 import { useClarifications } from '@/lib/clarifications/store'
 import { toast } from 'sonner'
@@ -29,39 +34,37 @@ export default function ClarificationReviewPage() {
     )
   }
 
-  const replyFooter = [
-    'Sent to:',
-    item.bidLabel,
-    item.supplier,
-    item.raisedAgo,
-    item.linkedField ? `linked to field: ${item.linkedField}` : null,
-  ]
-    .filter(Boolean)
-    .join(' · ')
-
   const canApply =
     sectionFromPerspective(item, 'ops') === 'needs_attention' &&
     item.reply &&
     item.impact
 
+  const siblings = getDispatchSiblings(items, item.dispatchId)
+  const dispatchNav = getDispatchSiblingNav(siblings, item.id)
+
   return (
     <div className="mx-auto w-full max-w-[720px] px-6 pb-20 pt-6 sm:px-8">
       <article className="space-y-5">
-        <header className="rounded-xl border border-cq-border bg-white p-5 sm:p-6">
-          <h1 className="text-2xl font-extrabold leading-tight text-cq-text sm:text-3xl">
-            {item.title}
-          </h1>
-          <p className="mt-2 text-sm text-cq-text-secondary">
-            {item.bidLabel} · {item.supplier} · raised {item.raisedAgo}
-          </p>
-          <p className="mt-1 text-sm text-cq-text-secondary">{item.project}</p>
-        </header>
+        <ClarificationReviewHeader
+          item={item}
+          prev={dispatchNav.prev}
+          next={dispatchNav.next}
+          index={dispatchNav.index}
+          total={dispatchNav.total}
+        />
 
         <section className="rounded-xl border border-[rgba(28,117,188,0.15)] bg-[rgba(28,117,188,0.055)] px-5 py-4 sm:p-6">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-cq-text">
+          <h2 className="text-xs font-bold uppercase tracking-wide text-cq-text-secondary">
+            Question
+          </h2>
+          <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-cq-text">
             {item.question}
           </p>
-          <p className="mt-3 text-xs leading-relaxed text-cq-text-secondary">{replyFooter}</p>
+          {item.linkedField ? (
+            <p className="mt-3 text-xs text-cq-text-secondary">
+              Linked field: <span className="font-semibold text-cq-text">{item.linkedField}</span>
+            </p>
+          ) : null}
         </section>
 
         {item.reply ? (
@@ -89,7 +92,14 @@ export default function ClarificationReviewPage() {
               </div>
             ) : null}
           </section>
-        ) : null}
+        ) : (
+          <section className="rounded-xl border border-dashed border-cq-border bg-cq-bg/40 px-5 py-8 text-center sm:p-6">
+            <p className="text-sm font-semibold text-cq-text">No answer yet</p>
+            <p className="mt-1 text-sm text-cq-text-secondary">
+              {item.supplier} has not replied — use Previous / Next to review other suppliers.
+            </p>
+          </section>
+        )}
 
         {item.impact ? (
           <ImpactReviewCard
@@ -100,16 +110,9 @@ export default function ClarificationReviewPage() {
                 : item.supplier
             }
           />
-        ) : (
-          item.status === 'batch_review' && (
-            <p className="rounded-xl border border-cq-border bg-white p-5 text-sm text-cq-text-secondary">
-              Combined responses are being reviewed across suppliers — impact preview unlocks once
-              a single consolidated answer is selected.
-            </p>
-          )
-        )}
+        ) : null}
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-end">
+        <div className="flex flex-col gap-3 border-t border-cq-border pt-5 sm:flex-row sm:flex-wrap sm:justify-end">
           <Link href="/clarifications" className={`${btnGhost} order-3 sm:order-none`}>
             Cancel
           </Link>
@@ -130,7 +133,6 @@ export default function ClarificationReviewPage() {
                 })
                 router.push('/clarifications')
               }}
-              disabled={false}
               className="order-1 rounded-lg bg-[var(--cq-green)] px-5 py-2.5 text-sm font-bold text-white hover:bg-[var(--cq-green-hover)] sm:order-none"
             >
               Accept change

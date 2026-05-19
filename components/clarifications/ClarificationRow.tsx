@@ -15,11 +15,7 @@ import {
 function opsNeedsAttentionPrimaryHref(c: Clarification): string | null {
   const sec = sectionFromPerspective(c, 'ops')
   if (sec !== 'needs_attention') return null
-  if (
-    c.status === 'review' ||
-    c.status === 'need_response' ||
-    c.status === 'batch_review'
-  ) {
+  if (c.status === 'review' || c.status === 'need_response') {
     return `/clarifications/${c.id}`
   }
   return null
@@ -33,20 +29,10 @@ function supplierNeedsAttentionHref(c: Clarification): string | null {
 
 function opsPrimaryLabel(status: Clarification['status']): string {
   if (status === 'need_response') return 'Respond'
-  if (status === 'batch_review') return 'Review all'
   return 'Review'
 }
 
-function rowContextLine(c: Clarification, perspective: Perspective): string {
-  const sec = sectionFromPerspective(c, perspective)
-  if (
-    c.rollup?.totalCount &&
-    (c.status === 'batch_review' ||
-      (sec === 'in_progress' && c.supplier === 'Multiple suppliers'))
-  ) {
-    const n = c.rollup.totalCount
-    return `${c.bidLabel} · sent ${c.raisedAgo} to ${n} supplier${n === 1 ? '' : 's'}`
-  }
+function rowContextLine(c: Clarification): string {
   return `${c.bidLabel} · ${c.project} · ${c.raisedAgo}`
 }
 
@@ -84,9 +70,12 @@ export function ClarificationRow({
       <div className="min-w-0 flex-1 space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <p className="font-bold leading-snug text-cq-text">{item.title}</p>
-          <CourtBadge label={badgeLabel} variant="ops" />
+          <CourtBadge
+            label={badgeLabel}
+            variant={perspective === 'supplier' ? 'supplier' : 'ops'}
+          />
         </div>
-        <p className="text-sm text-cq-text-secondary">{rowContextLine(item, perspective)}</p>
+        <p className="text-sm text-cq-text-secondary">{rowContextLine(item)}</p>
       </div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between lg:flex-col lg:items-end xl:flex-row xl:items-start">
         <StatusBlock item={item} perspective={perspective} align="right" />

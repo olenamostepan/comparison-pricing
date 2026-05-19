@@ -2,7 +2,6 @@ export type Status =
   | 'awaiting'
   | 'review'
   | 'need_response'
-  | 'batch_review'
   | 'applied'
   | 'closed'
 
@@ -14,6 +13,8 @@ export type AnswerSource = 'on-platform reply' | 'doc-extract' | 'manual'
 
 export type Clarification = {
   id: string
+  /** Shared by every record created in the same Raise-clarification submit. */
+  dispatchId: string
   title: string
   question: string
   linkedField?: string
@@ -56,12 +57,6 @@ export type Clarification = {
     currentNote?: string
     proposedValue: string
     proposedNote?: string
-  }
-
-  rollup?: {
-    repliedCount: number
-    totalCount: number
-    awaitingRemainder?: boolean
   }
 }
 

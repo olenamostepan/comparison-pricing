@@ -1,11 +1,15 @@
 'use client'
 
-import { ClarificationRow } from '@/components/clarifications/ClarificationRow'
-import type { Clarification } from '@/lib/clarifications/types'
+import Link from 'next/link'
+import { DispatchClarificationRow } from '@/components/clarifications/DispatchClarificationRow'
 import { DEMO_SUPPLIER_ID } from '@/lib/clarifications/mock-data'
 import {
+  groupClarificationsByDispatch,
+  partitionDispatchGroups,
+  type DispatchGroup,
+} from '@/lib/clarifications/dispatch-groups'
+import {
   isVisibleToDemoSupplier,
-  sectionFromPerspective,
   type Perspective,
 } from '@/lib/clarifications/perspective'
 import { useClarifications } from '@/lib/clarifications/store'
@@ -19,46 +23,85 @@ export function ClarificationsDashboard({ perspective }: { perspective: Perspect
       ? items.filter((c) => isVisibleToDemoSupplier(c, DEMO_SUPPLIER_ID))
       : items
 
-  const needs = visible.filter(
-    (c) => sectionFromPerspective(c, perspective) === 'needs_attention',
+  if (visible.length === 0) {
+    return (
+      <div className="mx-auto w-full max-w-screen-2xl px-6 pb-20 pt-4 sm:px-8 lg:px-10">
+        <div className="rounded-xl border border-cq-border bg-white p-8 text-center shadow-sm">
+          <p className="text-base font-bold text-cq-text">No clarifications in this view</p>
+          <p className="mt-2 text-sm text-cq-text-secondary">
+            {perspective === 'supplier' ? (
+              <>
+                The demo supplier is <span className="font-semibold text-cq-text">Tom · Evo Energy</span>.
+                Use the top bar switcher to open the ops workspace, or go to{' '}
+                <Link className="font-semibold text-cq-link underline" href="/supplier-comparison">
+                  Solar comparison
+                </Link>{' '}
+                and raise a clarification to suppliers including Evo Energy.
+              </>
+            ) : (
+              <>
+                Raise a question from{' '}
+                <Link className="font-semibold text-cq-link underline" href="/supplier-comparison">
+                  supplier comparison
+                </Link>{' '}
+                or use <span className="font-semibold text-cq-text">Start new project</span> in the header.
+              </>
+            )}
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  const groups = groupClarificationsByDispatch(visible)
+  const { needs_attention, in_progress, done } = partitionDispatchGroups(
+    groups,
+    perspective,
   )
-  const progress = visible.filter(
-    (c) => sectionFromPerspective(c, perspective) === 'in_progress',
-  )
-  const done = visible.filter((c) => sectionFromPerspective(c, perspective) === 'done')
 
   return (
     <div className="mx-auto w-full max-w-screen-2xl space-y-10 px-6 pb-20 sm:px-8 lg:px-10">
-      <DashboardSection title="Needs Attention" items={needs} perspective={perspective} />
-      <DashboardSection title="In Progress" items={progress} perspective={perspective} />
-      <DashboardSection title="Done" items={done} perspective={perspective} />
+      <DispatchDashboardSection
+        title="Needs Attention"
+        groups={needs_attention}
+        perspective={perspective}
+      />
+      <DispatchDashboardSection
+        title="In Progress"
+        groups={in_progress}
+        perspective={perspective}
+      />
+      <DispatchDashboardSection title="Done" groups={done} perspective={perspective} />
     </div>
   )
 }
 
-function DashboardSection({
+function DispatchDashboardSection({
   title,
-  items,
+  groups,
   perspective,
 }: {
   title: string
-  items: Clarification[]
+  groups: DispatchGroup[]
   perspective: Perspective
 }) {
+  if (groups.length === 0) return null
+
   return (
     <section>
       <h2 className="mb-4 text-base font-extrabold text-cq-text">
-        {title} ({items.length})
+        {title} ({groups.length})
       </h2>
-      <div className="flex flex-col gap-3">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="rounded-xl border border-cq-border bg-white p-4 shadow-sm sm:p-5"
-          >
-            <ClarificationRow item={item} perspective={perspective} />
-          </div>
-        ))}
+      <div className="overflow-hidden rounded-xl border border-cq-border bg-white shadow-sm">
+        <div className="divide-y divide-cq-border px-4 sm:px-5">
+          {groups.map((group) => (
+            <DispatchClarificationRow
+              key={group.dispatchId}
+              group={group}
+              perspective={perspective}
+            />
+          ))}
+        </div>
       </div>
     </section>
   )
