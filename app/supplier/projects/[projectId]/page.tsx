@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { Building2 } from 'lucide-react'
@@ -37,6 +38,22 @@ function tabFromQuery(value: string | null): ProjectTab {
 }
 
 export default function SupplierProjectPage() {
+  return (
+    <Suspense fallback={<SupplierProjectPageFallback />}>
+      <SupplierProjectPageInner />
+    </Suspense>
+  )
+}
+
+function SupplierProjectPageFallback() {
+  return (
+    <div className="mx-auto w-full max-w-screen-2xl px-6 py-8 sm:px-8 lg:px-10">
+      <div className="h-24 animate-pulse rounded-xl border border-cq-border bg-white" />
+    </div>
+  )
+}
+
+function SupplierProjectPageInner() {
   const params = useParams()
   const router = useRouter()
   const searchParams = useSearchParams()

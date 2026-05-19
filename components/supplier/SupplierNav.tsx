@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -65,10 +66,13 @@ function isTabActive(
 }
 
 /** Same underline tab strip pattern as `ClarificationsTopChrome` (ops). */
-export function SupplierNav({ pathname }: { pathname: string }) {
-  const searchParams = useSearchParams()
-  const screenTab = searchParams?.get('tab') ?? null
-
+function SupplierNavContent({
+  pathname,
+  screenTab,
+}: {
+  pathname: string
+  screenTab: string | null
+}) {
   return (
     <nav
       className="border-t border-cq-border bg-white"
@@ -105,5 +109,22 @@ export function SupplierNav({ pathname }: { pathname: string }) {
         })}
       </div>
     </nav>
+  )
+}
+
+function SupplierNavWithSearchParams({ pathname }: { pathname: string }) {
+  const searchParams = useSearchParams()
+  const screenTab = searchParams?.get('tab') ?? null
+  return <SupplierNavContent pathname={pathname} screenTab={screenTab} />
+}
+
+/** Same underline tab strip pattern as `ClarificationsTopChrome` (ops). */
+export function SupplierNav({ pathname }: { pathname: string }) {
+  return (
+    <React.Suspense
+      fallback={<SupplierNavContent pathname={pathname} screenTab={null} />}
+    >
+      <SupplierNavWithSearchParams pathname={pathname} />
+    </React.Suspense>
   )
 }
