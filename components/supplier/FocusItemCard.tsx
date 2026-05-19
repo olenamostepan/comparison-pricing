@@ -22,7 +22,7 @@ const btnDark =
 export function FocusItemCard({ item }: { item: FocusItem }) {
   const href =
     item.clarificationId != null
-      ? `/supplier/clarifications/${item.clarificationId}`
+      ? '/supplier/projects/322?tab=questions'
       : undefined
 
   const noop = (msg: string) => () => toast.message(msg)

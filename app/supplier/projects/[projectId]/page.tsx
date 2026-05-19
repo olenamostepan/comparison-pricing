@@ -1,0 +1,193 @@
+'use client'
+
+import * as React from 'react'
+import Link from 'next/link'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { Building2 } from 'lucide-react'
+import * as Tabs from '@radix-ui/react-tabs'
+import { cn } from '@/lib/utils'
+import { SupplierQuestionsTab } from '@/components/supplier/questions/SupplierQuestionsTab'
+import {
+  SUPPLIER_PROJECTS,
+  DEMO_PROJECT_ID,
+} from '@/lib/supplier/questions/mock-data'
+import { useSupplierQuestions } from '@/lib/supplier/questions/store'
+
+type ProjectTab =
+  | 'project-info'
+  | 'supporting-docs'
+  | 'bid-overview'
+  | 'questions'
+
+const TAB_VALUES: ProjectTab[] = [
+  'project-info',
+  'supporting-docs',
+  'bid-overview',
+  'questions',
+]
+
+function tabFromQuery(value: string | null): ProjectTab {
+  if (value && TAB_VALUES.includes(value as ProjectTab)) {
+    return value as ProjectTab
+  }
+  if (value === 'qa' || value === 'bid-clarifications' || value === 'clarifications') {
+    return 'questions'
+  }
+  return 'project-info'
+}
+
+export default function SupplierProjectPage() {
+  const params = useParams()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const { getQuestions } = useSupplierQuestions()
+
+  const projectId = (params?.projectId as string | undefined) ?? DEMO_PROJECT_ID
+  const project = SUPPLIER_PROJECTS[projectId]
+  const questionCount = getQuestions(projectId).length
+
+  const [screenTab, setScreenTab] = React.useState<ProjectTab>('project-info')
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  React.useEffect(() => {
+    setScreenTab(tabFromQuery(searchParams.get('tab')))
+  }, [searchParams])
+
+  const setScreenTabWithUrl = React.useCallback(
+    (tab: ProjectTab) => {
+      setScreenTab(tab)
+      const params = new URLSearchParams(searchParams.toString())
+      if (tab === 'project-info') params.delete('tab')
+      else params.set('tab', tab)
+      const qs = params.toString()
+      router.replace(
+        `/supplier/projects/${projectId}${qs ? `?${qs}` : ''}`,
+        { scroll: false },
+      )
+    },
+    [router, searchParams, projectId],
+  )
+
+  if (!project) {
+    return (
+      <div className="mx-auto max-w-2xl px-6 py-16 text-center">
+        <p className="text-cq-text-secondary">This project could not be found.</p>
+        <Link
+          href="/supplier"
+          className="mt-4 inline-block font-bold text-cq-link underline"
+        >
+          Back to Focus
+        </Link>
+      </div>
+    )
+  }
+
+  const submittedLine = [project.bidSubmittedLabel, project.bidLabel]
+    .filter(Boolean)
+    .join(' · ')
+
+  return (
+    <div className="mx-auto w-full max-w-screen-2xl px-6 py-8 sm:px-8 lg:px-10">
+      <article className="space-y-6">
+        <header className="flex gap-4 rounded-xl border border-cq-border bg-white p-5 sm:p-6">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-cq-border bg-cq-bg">
+            <Building2 className="h-6 w-6 text-cq-text-secondary" aria-hidden />
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-xl font-extrabold leading-tight text-cq-text sm:text-2xl">
+              {project.name}
+            </h1>
+            <p className="mt-1 text-sm text-cq-text-secondary">{submittedLine}</p>
+          </div>
+        </header>
+
+        {mounted ? (
+          <Tabs.Root
+            value={screenTab}
+            onValueChange={(v) => setScreenTabWithUrl(v as ProjectTab)}
+          >
+            <Tabs.List className="flex flex-wrap gap-6 border-b border-cq-border sm:gap-8">
+              <Tabs.Trigger
+                value="project-info"
+                className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
+              >
+                Project Info
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                value="supporting-docs"
+                className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
+              >
+                Supporting Documents
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                value="bid-overview"
+                className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
+              >
+                Bid Overview
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                value="questions"
+                className="px-1 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
+              >
+                Questions ({questionCount})
+              </Tabs.Trigger>
+            </Tabs.List>
+          </Tabs.Root>
+        ) : (
+          <div className="flex flex-wrap gap-6 border-b border-cq-border sm:gap-8">
+            <span className="border-b-2 border-cq-green py-3 text-sm font-semibold text-cq-green">
+              Project Info
+            </span>
+            <span className="py-3 text-sm font-semibold text-cq-text-secondary">
+              Supporting Documents
+            </span>
+            <span className="py-3 text-sm font-semibold text-cq-text-secondary">
+              Bid Overview
+            </span>
+            <span className="py-3 text-sm font-semibold text-cq-text-secondary">
+              Questions ({questionCount})
+            </span>
+          </div>
+        )}
+
+        <div className={cn(screenTab !== 'questions' && 'rounded-xl border border-cq-border bg-white p-6 shadow-sm')}>
+          {screenTab === 'questions' && mounted ? (
+            <SupplierQuestionsTab projectId={projectId} />
+          ) : screenTab === 'supporting-docs' ? (
+            <PlaceholderPanel title="Supporting Documents">
+              Tender brief, site photos, and landlord constraints — prototype placeholder.
+            </PlaceholderPanel>
+          ) : screenTab === 'bid-overview' ? (
+            <PlaceholderPanel title="Bid Overview">
+              Your submitted pricing and scope for this tender — prototype placeholder.
+            </PlaceholderPanel>
+          ) : (
+            <PlaceholderPanel title="Project Info">
+              Solar PV retrofit across LL1–LL3 car park roofs at Braehead Shopping Centre.
+              Review your bid status and respond to questions from the Questions tab.
+            </PlaceholderPanel>
+          )}
+        </div>
+      </article>
+    </div>
+  )
+}
+
+function PlaceholderPanel({
+  title,
+  children,
+}: {
+  title: string
+  children: React.ReactNode
+}) {
+  return (
+    <div>
+      <h2 className="text-base font-extrabold text-cq-text">{title}</h2>
+      <p className="mt-2 text-sm leading-relaxed text-cq-text-secondary">{children}</p>
+    </div>
+  )
+}

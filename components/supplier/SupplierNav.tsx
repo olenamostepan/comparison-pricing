@@ -25,7 +25,12 @@ const TABS: Array<{
     href: '/supplier/clarifications',
     activePrefix: '/supplier/clarifications',
   },
-  { id: 'projects', label: 'Projects' },
+  {
+    id: 'projects',
+    label: 'Projects',
+    href: '/supplier/projects/322',
+    activePrefix: '/supplier/projects',
+  },
   { id: 'tenders', label: 'Tenders' },
   { id: 'surveys', label: 'Surveys' },
   { id: 'pricing', label: 'Pricing' },
@@ -42,6 +47,9 @@ function isTabActive(
   if (tab.activePrefix) {
     if (tab.id === 'clarifications') {
       return pathname.startsWith('/supplier/clarifications')
+    }
+    if (tab.id === 'projects') {
+      return pathname.startsWith('/supplier/projects')
     }
     return pathname.startsWith(tab.activePrefix)
   }
