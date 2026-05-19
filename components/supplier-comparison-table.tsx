@@ -2,9 +2,9 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { Sparkles, ChevronDown, ChevronRight, ChevronUp, HelpCircle } from 'lucide-react'
+import { Sparkles, ChevronDown, ChevronRight, ChevronUp, HelpCircle, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import * as Tabs from '@radix-ui/react-tabs'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
@@ -24,11 +24,29 @@ import {
   type ClarificationsProjectSlug,
 } from '@/lib/clarifications/mock-data'
 import { useClarifications } from '@/lib/clarifications/store'
+import { QuestionsTab } from '@/components/questions/QuestionsTab'
+import { SupplierMatchingTab } from '@/components/questions/SupplierMatchingTab'
+import { useQuestions } from '@/lib/questions/store'
 
 // ─── Types ─────────────────────────────────────────────────────────────
 
 type ViewMode = 'absolute' | 'per-kwp' | 'pct-total'
-type Cluster = 'full-scope' | 'smaller'
+type TenderScreenTab = 'tender-results' | 'supplier-matching' | 'questions'
+
+const TAB_QUERY_VALUES: TenderScreenTab[] = [
+  'tender-results',
+  'supplier-matching',
+  'questions',
+]
+
+function tabFromQuery(value: string | null): TenderScreenTab | null {
+  if (value && TAB_QUERY_VALUES.includes(value as TenderScreenTab)) {
+    return value as TenderScreenTab
+  }
+  if (value === 'comparison') return 'tender-results'
+  if (value === 'clarifications') return 'questions'
+  return null
+}
 
 type NoteFlag = {
   type: 'warn' | 'info'
@@ -354,8 +372,10 @@ export function SupplierComparisonTable({
   projectType?: ProjectType
 } = {}) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { openRaiseModal } = useClarifications()
-  const [cluster, setCluster] = React.useState<Cluster>('full-scope')
+  const { getQuestions, openAskModal } = useQuestions()
+  const [screenTab, setScreenTab] = React.useState<TenderScreenTab>('tender-results')
   const [mounted, setMounted] = React.useState(false)
   const [viewMode, setViewMode] = React.useState<ViewMode>('absolute')
   const [showOverviewDetails, setShowOverviewDetails] = React.useState(false)
@@ -376,9 +396,7 @@ export function SupplierComparisonTable({
             const { ROSTOCK_LED_SUPPLIERS } = require('@/lib/led-rostock-supplier-data')
             return ROSTOCK_LED_SUPPLIERS.map(mapLedToSupplier)
           })()
-        : cluster === 'full-scope'
-        ? FULL_SCOPE_SUPPLIERS
-        : SMALLER_SUPPLIERS
+        : FULL_SCOPE_SUPPLIERS
   const suppliers =
     sortBy === 'quality'
         ? [...baseSuppliers].sort((a, b) =>
@@ -390,6 +408,11 @@ export function SupplierComparisonTable({
 
 
   React.useEffect(() => setMounted(true), [])
+
+  React.useEffect(() => {
+    const fromUrl = tabFromQuery(searchParams.get('tab'))
+    if (fromUrl) setScreenTab(fromUrl)
+  }, [searchParams])
 
   const toggleExpand = (id: string) => {
     setExpandedIds((prev) => {
@@ -418,6 +441,18 @@ export function SupplierComparisonTable({
   const currency = (projectType === 'led' || projectType === 'led-rostock') ? 'eur' as const : 'gbp' as const
   const formatAmount = (n: number) => formatPounds(n, currency)
   const clarificationSlug = projectType as ClarificationsProjectSlug
+  const questionCount = getQuestions(clarificationSlug).length
+
+  const setScreenTabWithUrl = React.useCallback(
+    (tab: TenderScreenTab) => {
+      setScreenTab(tab)
+      const params = new URLSearchParams(searchParams.toString())
+      params.set('tab', tab)
+      router.replace(`${basePath}?${params.toString()}`, { scroll: false })
+    },
+    [router, searchParams, basePath],
+  )
+
   const handleCompare = () => {
     const ids = Array.from(selectedIds)
     if (ids.length >= 2) {
@@ -425,21 +460,6 @@ export function SupplierComparisonTable({
     }
   }
   const totalSum = suppliers.reduce((s, x) => s + x.totalPounds, 0)
-
-  const clusterConfig = {
-    'full-scope': {
-      label: 'Full-Scope Systems (393–558 kWp)',
-      count: 6,
-      description: '6 comparable CapEx submissions',
-    },
-    smaller: {
-      label: 'Smaller Systems (1,670–2,333 kWp)',
-      count: 4,
-      description: '4 submissions covering fewer roof zones / smaller scope',
-    },
-  }
-
-  const cfg = clusterConfig[cluster]
 
   const overview =
     projectType === 'led'
@@ -450,7 +470,7 @@ export function SupplierComparisonTable({
   const responseRate = overview ? `${overview.responseRate}% response rate` : ''
 
   return (
-    <div className={cn('min-h-screen bg-cq-bg', selectedIds.size >= 2 && 'pb-20')}>
+    <div className={cn('min-h-screen bg-cq-bg', screenTab === 'tender-results' && selectedIds.size >= 2 && 'pb-20')}>
       <div className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10 py-8">
         {/* Header */}
         <header className="mb-6">
@@ -605,45 +625,82 @@ export function SupplierComparisonTable({
           </div>
         )}
 
-        {/* Cluster tabs — hide for LED. Defer Radix Tabs to client to avoid hydration mismatch. */}
         <div className="mt-6">
-          {(projectType !== 'led' && projectType !== 'led-rostock') && (
-            mounted ? (
-              <Tabs.Root value={cluster} onValueChange={(v) => { setCluster(v as Cluster); setExpandedIds(new Set()) }}>
-                <Tabs.List className="flex gap-8 border-b border-cq-border mb-4">
+          {mounted ? (
+            <Tabs.Root
+              value={screenTab}
+              onValueChange={(v) => setScreenTabWithUrl(v as TenderScreenTab)}
+            >
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-cq-border">
+                <Tabs.List className="flex flex-wrap gap-6 sm:gap-8">
                   <Tabs.Trigger
-                    value="full-scope"
-                    className="px-4 py-3 text-sm font-semibold text-cq-text-secondary data-[state=active]:text-cq-green data-[state=active]:border-b-2 data-[state=active]:border-cq-green outline-none"
+                    value="tender-results"
+                    className="px-4 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
                   >
-                    Full-Scope Systems (3,630–4,513 kWp)
+                    Tender results
                   </Tabs.Trigger>
                   <Tabs.Trigger
-                    value="smaller"
-                    className="px-4 py-3 text-sm font-semibold text-cq-text-secondary data-[state=active]:text-cq-green data-[state=active]:border-b-2 data-[state=active]:border-cq-green outline-none"
+                    value="supplier-matching"
+                    className="px-4 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
                   >
-                    Smaller Systems (1,670–2,333 kWp)
+                    Supplier matching
+                  </Tabs.Trigger>
+                  <Tabs.Trigger
+                    value="questions"
+                    className="px-4 py-3 text-sm font-semibold text-cq-text-secondary outline-none data-[state=active]:border-b-2 data-[state=active]:border-cq-green data-[state=active]:text-cq-green"
+                  >
+                    Questions ({questionCount})
                   </Tabs.Trigger>
                 </Tabs.List>
-                <p className="text-sm text-cq-text-secondary -mt-2 mb-4">
-                  {cfg.description}
-                </p>
-              </Tabs.Root>
-            ) : (
-              <div>
-                <div className="flex gap-8 border-b border-cq-border mb-4">
-                  <span className="px-4 py-3 text-sm font-semibold text-cq-green border-b-2 border-cq-green">
-                    Full-Scope Systems (3,630–4,513 kWp)
-                  </span>
-                  <span className="px-4 py-3 text-sm font-semibold text-cq-text-secondary">
-                    Smaller Systems (1,670–2,333 kWp)
-                  </span>
-                </div>
-                <p className="text-sm text-cq-text-secondary -mt-2 mb-4">
-                  {clusterConfig['full-scope'].description}
-                </p>
+                {screenTab === 'questions' && (
+                  <button
+                    type="button"
+                    onClick={openAskModal}
+                    className="mb-1 inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-cq-green px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-cq-green-hover sm:mb-0"
+                  >
+                    <Plus className="h-4 w-4" aria-hidden />
+                    Ask question
+                  </button>
+                )}
               </div>
-            )
+            </Tabs.Root>
+          ) : (
+            <div className="mb-4 flex flex-wrap gap-6 border-b border-cq-border sm:gap-8">
+              <span className="border-b-2 border-cq-green px-4 py-3 text-sm font-semibold text-cq-green">
+                Tender results
+              </span>
+              <span className="px-4 py-3 text-sm font-semibold text-cq-text-secondary">
+                Supplier matching
+              </span>
+              <span className="px-4 py-3 text-sm font-semibold text-cq-text-secondary">
+                Questions ({questionCount})
+              </span>
+            </div>
           )}
+
+          {screenTab === 'questions' && mounted ? (
+            <QuestionsTab tenderSlug={clarificationSlug} />
+          ) : screenTab === 'supplier-matching' && mounted ? (
+            <SupplierMatchingTab
+              suppliers={suppliers.map((s) => ({
+                id: s.id,
+                name: s.name,
+                quality: s.quality,
+                perUnit: s.perKwp,
+                unitLabel:
+                  projectType === 'led' || projectType === 'led-rostock'
+                    ? '/luminaire'
+                    : '/kWp',
+              }))}
+              currencySymbol={currency === 'eur' ? '€' : '£'}
+            />
+          ) : (
+            <>
+          <p className="mb-4 text-sm text-cq-text-secondary">
+            {projectType === 'led' || projectType === 'led-rostock'
+              ? `${suppliers.length} CapEx submissions`
+              : '6 comparable CapEx submissions'}
+          </p>
 
           {/* Controls row — breakdown view filter (applies to expanded card only) */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -1115,10 +1172,12 @@ export function SupplierComparisonTable({
             Notes reflect submission materials; expand rows for category breakdown where provided.
           </p>
           )}
+            </>
+          )}
         </div>
 
         {/* Compare shortlisted bar */}
-        {selectedIds.size >= 2 && (
+        {screenTab === 'tender-results' && selectedIds.size >= 2 && (
           <div className="fixed bottom-0 left-0 right-0 z-10 border-t border-cq-border bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
             <div className="w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-10 py-4 flex items-center justify-between">
               <p className="text-sm text-cq-text-secondary">

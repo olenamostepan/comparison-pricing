@@ -35,7 +35,8 @@ export const MOCK_CLARIFICATION_RECIPIENTS = [
   { id: 'wisag-rostock', name: 'WISAG Gebäudetechnik Nord-Ost' },
 ] satisfies Array<{ id: string; name: string }>
 
-export const DEFAULT_CLARIFICATION_PROJECT = 'Manchester Office Solar'
+/** Supplier-comparison / tender 322 — Braehead shopping centre */
+export const DEFAULT_CLARIFICATION_PROJECT = 'Project 322 — Braehead'
 
 /** Match comparison route context when opening Raise modal */
 export type ClarificationsProjectSlug = 'solar' | 'led' | 'led-rostock'
@@ -52,6 +53,16 @@ export function clarificationBidId(slug: ClarificationsProjectSlug): string {
   if (slug === 'led') return '310'
   if (slug === 'led-rostock') return '651'
   return '322'
+}
+
+/** Clarifications raised in the context of a supplier-comparison / tender route. */
+export function clarificationsForTenderSlug(
+  items: Clarification[],
+  slug: ClarificationsProjectSlug,
+): Clarification[] {
+  const project = clarificationProjectLabel(slug)
+  const bidId = clarificationBidId(slug)
+  return items.filter((c) => c.project === project && c.bidId === bidId)
 }
 
 /** Shared by the eight seeded “same question, many suppliers” rows */

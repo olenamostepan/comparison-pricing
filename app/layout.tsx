@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { ProjectSwitcher } from '@/components/project-switcher'
 import { ClarificationsProvider } from '@/lib/clarifications/store'
+import { QuestionsProvider } from '@/lib/questions/store'
 import { RaiseClarificationModal } from '@/components/clarifications/RaiseClarificationModal'
 import { Toaster } from 'sonner'
 import './globals.css'
@@ -29,11 +30,13 @@ export default function RootLayout({
       </head>
       <body className={`font-sans antialiased`}>
         <ClarificationsProvider>
-          <ProjectSwitcher />
-          {children}
-          <RaiseClarificationModal />
-          <Toaster position="bottom-right" />
-          <Analytics />
+          <QuestionsProvider>
+            <ProjectSwitcher />
+            {children}
+            <RaiseClarificationModal />
+            <Toaster position="bottom-right" />
+            <Analytics />
+          </QuestionsProvider>
         </ClarificationsProvider>
       </body>
     </html>
